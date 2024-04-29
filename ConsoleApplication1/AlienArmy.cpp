@@ -102,7 +102,7 @@ bool AlienArmy::RemoveAlienMonster(Unit*& Monster)
 		int randomIndex = rand() % (AMcount);//we will get a random index to get a random monster
 		//range of the random Index is from 0 to currentSize - 1
 		Monster = AlienMonsters[randomIndex];
-		AlienMonsters[randomIndex] = AlienMonsters[AMcount - 1];
+		AlienMonsters[randomIndex] = AlienMonsters[AMcount - 1];  
 		AMcount--;
 	}
 	return true;

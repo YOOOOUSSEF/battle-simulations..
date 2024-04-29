@@ -8,7 +8,7 @@ using namespace std;
 
 class Unit {
 private:
-	enum TYPE {ES,ET,EG,AS,AM,AD};
+	enum TYPE {ES=1,ET,EG,AS,AM,AD};
 	int ID;
 	int Tj,Health,Power;
 	int AttackCap;
