@@ -7,7 +7,7 @@ Unit::Unit(double h, double pw, double AC, int tj) :Health(h), Power(pw), Attack
 	ID = -1;
 }
 
-void Unit::Attack()
+void Unit::Attack(Unit*&a)
 {
 }
 

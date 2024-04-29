@@ -8,14 +8,14 @@ using namespace std;
 
 class Unit {
 private:
-	enum TYPE {ES=1,ET,EG,AS,AM,AD};
+	enum TYPE {ES,ET,EG,AS,AM,AD};
 	int ID;
 	int Tj,Health,Power;
 	int AttackCap;
 	int type;
 public:
 	Unit(double h=0, double pw=0, double AC=0, int tj=0);
-	virtual void Attack() =0;
+	virtual void Attack(Unit*&);
 	void setID(int id);
 	void settype(int t);
 	void setPower(int p);

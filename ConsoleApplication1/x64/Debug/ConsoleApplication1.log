@@ -7,11 +7,14 @@ C:\battle_project\ConsoleApplication1\EarthArmy.h(3,9): warning C4067: unexpecte
   EarthArmy.cpp
 C:\battle_project\ConsoleApplication1\EarthArmy.h(3,9): warning C4067: unexpected tokens following preprocessor directive - expected a newline
   EarthSoldier.cpp
+C:\battle_project\ConsoleApplication1\EarthSoldier.cpp(10,13): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   EarthTank.cpp
+C:\battle_project\ConsoleApplication1\EarthTank.cpp(10,13): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   Game.cpp
 C:\battle_project\ConsoleApplication1\EarthArmy.h(3,9): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 C:\battle_project\ConsoleApplication1\Game.cpp(16,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   Gunnery.cpp
+C:\battle_project\ConsoleApplication1\Gunnery.cpp(10,13): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   randGen.cpp
   Unit.cpp
 C:\battle_project\ConsoleApplication1\Unit.cpp(5,59): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
