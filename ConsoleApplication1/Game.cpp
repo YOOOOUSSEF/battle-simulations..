@@ -336,5 +336,130 @@ void Game::AttackLogic() {
 		earthArmy.addEarthGunnery(Eg);
 	}
 	//////////////////////////////////////////////////////////
+	{
 
+		Unit* Es = nullptr, * As = nullptr;
+		bool as = true, es = true;
+		as = alienArmy.RemoveAlienSoldier(As);
+		if (as)
+		{
+			for (int i = 0; i < As->getAttackCap(); i++)
+			{
+				es = earthArmy.RemoveEarthSoldier(Es);
+				if (es)
+				{
+					As->Attack(Es);
+					if (Es->getTa() == -1)Es->setTa(timeStep);
+					if (Es->getHealth() <= 0)
+					{
+						if (Es->getTd() == -1)Es->setTd(timeStep);
+						addToKilledList(Es);
+					}
+					else
+					{
+						TempList.enqueue(Es);
+					}
+				}
+			}
+			alienArmy.addAlienSoldier(As);
+		}
+	}
+	///////////////////////////////////////////////////////////////////
+	{
+
+		Unit* Am = nullptr, * Es = nullptr, * Et = nullptr;
+		bool am = true, es = true, et = true;
+
+		am = alienArmy.RemoveAlienMonster(Am);
+		if (am)
+		{
+			for (int i = 0; i < Am->getAttackCap(); i++)
+			{
+				es = earthArmy.RemoveEarthSoldier(Es);
+				et = earthArmy.RemoveEarthTank(Et);
+				if (am)
+				{
+					Am->Attack(Es);
+					Am->Attack(Et);
+
+					if (Es->getTa() == -1)Es->setTa(timeStep);
+					if (Es->getHealth() <= 0)
+					{
+						Es->setTd(timeStep);
+						addToKilledList(Es);
+					}
+					else
+					{
+						TempList.enqueue(Es);
+					}
+					if (Et->getTa() == -1)Es->setTa(timeStep);
+					if (Et->getHealth() <= 0)
+					{
+						if (Et->getTd() == -1)Et->setTd(timeStep);
+						addToKilledList(Et);
+					}
+					else
+					{
+						TempList.enqueue(Et);
+					}
+
+
+				}
+
+
+			}
+			alienArmy.addAlienSoldier(Am);
+		}
+	}
+
+	{
+		int capacity;
+		///////////////////////////////////////////////
+		Unit* Ad1 = nullptr, * Ad2 = nullptr, * Eg = nullptr, * Et = nullptr;
+		bool ad1 = true, ad2 = true, eg = true, et = true;
+
+		ad1 = alienArmy.RemoveAlienDroneFirst(Ad1);
+		ad2 = alienArmy.RemoveAlienDroneLast(Ad2);
+		if (Ad1->getAttackCap() < Ad2->getAttackCap()) capacity = Ad1->getAttackCap();
+		else capacity = Ad2->getAttackCap();
+		if (ad1 && ad2)
+		{
+			for (int i = 0; i < capacity; i++)
+			{
+				eg = earthArmy.RemoveEarthSoldier(Eg);
+				et = earthArmy.RemoveEarthTank(Et);
+
+
+				Ad1->Attack(Eg);
+				Ad2->Attack(Eg);
+				Ad1->Attack(Et);
+				Ad2->Attack(Et);
+
+				if (Eg->getTa() == -1)  Eg->setTa(timeStep);
+				if (Eg->getHealth() <= 0)
+				{
+					if (Eg->getTd() == -1)Eg->setTd(timeStep);
+					addToKilledList(Eg);
+				}
+				else
+				{
+					TempList.enqueue(Eg);
+				}
+
+				if (Et->getTa() == -1)Et->setTa(timeStep);
+				if (Et->getHealth() <= 0)
+				{
+					if (Et->getTd() == -1)Et->setTd(timeStep);
+					addToKilledList(Et);
+				}
+				else
+				{
+					TempList.enqueue(Et);
+				}
+			}
+			alienArmy.addAlienSoldier(Ad1);
+			alienArmy.addAlienSoldier(Ad2);
+
+		}
+	}
 }
