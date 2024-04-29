@@ -1,0 +1,75 @@
+#include"Unit.h"
+#include<iostream>
+using namespace std;
+
+Unit::Unit(double h, double pw, double AC, int tj) :Health(h), Power(pw), AttackCap(AC), Tj(tj)
+{
+	ID = -1;
+}
+
+void Unit::Attack()
+{
+}
+
+
+void Unit::setID(int id)
+{
+	ID = id;
+}
+
+void Unit::settype(int t)
+{
+	type = t;
+}
+
+void Unit::setPower(int p)
+{
+	Power = p;
+}
+
+void Unit::setHealth(int h)
+{
+	Health = h;
+}
+
+int Unit::getID() const
+{
+	return ID;
+}
+
+void Unit::setTJ(int t)
+{
+	Tj = t;
+}
+
+int Unit::getPower() const
+{
+	return Power;
+}
+
+int Unit::getHealth() const
+{
+	return Health;
+}
+
+int Unit::getTYPE() const
+{
+	return type;
+}
+
+void Unit::setAttackCap(int x)
+{
+	AttackCap = x;
+}
+
+int Unit::getAttackCap() const
+{
+	return AttackCap;
+}
+
+ostream& operator<<(ostream& out, Unit* u)
+{
+	out << u->getID();
+	return out;
+	// TODO: insert return statement here
+}
