@@ -10,7 +10,7 @@ class Unit {
 private:
 	enum TYPE {ES,ET,EG,AS,AM,AD};
 	int ID;
-	int Tj,Health,Power;
+	int Tj,Ta,Td,Health,Power;
 	int AttackCap;
 	int type;
 public:
@@ -22,6 +22,10 @@ public:
 	void setHealth(int h);
 	int getID()const;
 	void setTJ(int t);
+	void setTa(int t);
+	void setTd(int t);
+	int getTa()const;
+	int getTd()const;
 	int getPower()const;
 	int getHealth()const;
 	int getTYPE()const;

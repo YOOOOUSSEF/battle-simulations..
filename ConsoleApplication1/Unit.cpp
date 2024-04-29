@@ -5,6 +5,8 @@ using namespace std;
 Unit::Unit(double h, double pw, double AC, int tj) :Health(h), Power(pw), AttackCap(AC), Tj(tj)
 {
 	ID = -1;
+	setTa(-1);
+	setTd(-1);
 }
 
 void Unit::Attack(Unit*&a)
@@ -65,6 +67,19 @@ void Unit::setAttackCap(int x)
 int Unit::getAttackCap() const
 {
 	return AttackCap;
+}
+
+void Unit::setTa(int t) {
+	Ta = t;
+}
+void Unit::setTd(int t) {
+	Td = t;
+}
+int Unit::getTa()const {
+	return Ta;
+}
+int Unit::getTd()const {
+	return Td;
 }
 
 ostream& operator<<(ostream& out, Unit* u)

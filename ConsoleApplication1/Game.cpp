@@ -5,8 +5,8 @@ using namespace std;
 Game::Game()
 {
 	int input;
-	int timeStep = 0;
-	int killedCount = 0;
+	 timeStep = 0;
+	 killedCount = 0;
 	//intialize the data members of the game
 	cout << "enter the file Name" << endl;
 	cin >> fileName;//entering the name of file
@@ -207,6 +207,20 @@ void Game::TEST()
 		}
 
 	}
+
+
+}
+
+void Game::AttackLogic() {
+	Unit* Es = nullptr,*As=nullptr;
+	bool as = true, es = true;
+	es = earthArmy.RemoveEarthSoldier(Es);
+	if(es)
+	for (int i = 0; i < Es->getAttackCap(); i++) {
+		as = alienArmy.RemoveAlienSoldier(As);
+		if (as)
+			Es->Attack(As);
+     }
 
 
 }

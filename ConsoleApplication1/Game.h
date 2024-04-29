@@ -18,10 +18,11 @@ private:
 	randGen R;
 	LinkedQueue<Unit*> TempList;
 	LinkedQueue<Unit*> KilledList;
-	int killedCount;
+	int killedCount,timeStep;
 	char fileName[100];
 public:
 	Game();
+	void AttackLogic();
 	void LoadFromFile(char filename[]);
 	void addToKilledList(Unit* killed);
 	void PrintKilledList() const; 
