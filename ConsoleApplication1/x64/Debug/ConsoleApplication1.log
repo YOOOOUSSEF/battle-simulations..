@@ -1,28 +1,27 @@
 ﻿  AlienArmy.cpp
   AlienDrone.cpp
-E:\Battle2\ConsoleApplication1\AlienDrone.cpp(12,13): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\battle_project\ConsoleApplication1\AlienDrone.cpp(12,13): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   AlienMonster.cpp
-E:\Battle2\ConsoleApplication1\AlienMonster.cpp(10,13): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\battle_project\ConsoleApplication1\AlienMonster.cpp(10,13): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   AlienSoldier.cpp
-E:\Battle2\ConsoleApplication1\AlienSoldier.cpp(11,13): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\battle_project\ConsoleApplication1\AlienSoldier.cpp(11,13): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   main.cpp
-E:\Battle2\ConsoleApplication1\EarthArmy.h(3,9): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\battle_project\ConsoleApplication1\EarthArmy.h(3,9): warning C4067: unexpected tokens following preprocessor directive - expected a newline
   EarthArmy.cpp
-E:\Battle2\ConsoleApplication1\EarthArmy.h(3,9): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\battle_project\ConsoleApplication1\EarthArmy.h(3,9): warning C4067: unexpected tokens following preprocessor directive - expected a newline
   EarthSoldier.cpp
-E:\Battle2\ConsoleApplication1\EarthSoldier.cpp(10,13): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\battle_project\ConsoleApplication1\EarthSoldier.cpp(10,13): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   EarthTank.cpp
-E:\Battle2\ConsoleApplication1\EarthTank.cpp(10,13): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\battle_project\ConsoleApplication1\EarthTank.cpp(10,13): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   Game.cpp
-E:\Battle2\ConsoleApplication1\EarthArmy.h(3,9): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-E:\Battle2\ConsoleApplication1\Game.cpp(16,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\battle_project\ConsoleApplication1\EarthArmy.h(3,9): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\battle_project\ConsoleApplication1\Game.cpp(16,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   Gunnery.cpp
-E:\Battle2\ConsoleApplication1\Gunnery.cpp(10,13): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\battle_project\ConsoleApplication1\Gunnery.cpp(10,13): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   randGen.cpp
   Unit.cpp
-E:\Battle2\ConsoleApplication1\Unit.cpp(5,59): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-E:\Battle2\ConsoleApplication1\Unit.cpp(5,69): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-E:\Battle2\ConsoleApplication1\Unit.cpp(5,84): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\battle_project\ConsoleApplication1\Unit.cpp(5,59): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\battle_project\ConsoleApplication1\Unit.cpp(5,69): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\battle_project\ConsoleApplication1\Unit.cpp(5,84): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   Generating Code...
-  LINK : E:\Battle2\x64\Debug\ConsoleApplication1.exe not found or not built by the last incremental link; performing full link
-  ConsoleApplication1.vcxproj -> E:\Battle2\x64\Debug\ConsoleApplication1.exe
+  ConsoleApplication1.vcxproj -> C:\battle_project\x64\Debug\ConsoleApplication1.exe

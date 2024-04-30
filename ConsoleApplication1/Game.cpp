@@ -240,8 +240,10 @@ void Game::AttackLogic() {
 	et = earthArmy.RemoveEarthTank(Et);
 	if (et) {
 		for (int i = 0; i < Et->getAttackCap(); i++) {
+			
 			am = alienArmy.RemoveAlienMonster(Am);
 			if (am) {
+			
 				Et->Attack(Am);
 				if (Am->getTa() == -1)
 					Am->setTa(timeStep);
@@ -253,39 +255,49 @@ void Game::AttackLogic() {
 					alienArmy.addAlienMonster(Am);
 			}
 			if (earthArmy.getEScount() < .3 * alienArmy.getAScount()) {
-				for (; i < Et->getAttackCap(); i++) {
-					as = alienArmy.RemoveAlienSoldier(As);
-					if (as) {
-						Et->Attack(As);
-						if (As->getTa() == -1)
-							As->setTa(timeStep);
-						if (As->getHealth() <= 0) {
-							As->setTd(timeStep);
-							addToKilledList(As);
+				for (; i < Et->getAttackCap(); ) {
+					bool flag1 = false, flag2 = false;
+						as = alienArmy.RemoveAlienSoldier(As);
+						if (as) {
+							i++;
+							flag1 = true;
+							Et->Attack(As);
+							if (As->getTa() == -1)
+								As->setTa(timeStep);
+							if (As->getHealth() <= 0) {
+								As->setTd(timeStep);
+								addToKilledList(As);
+							}
+							else
+								alienArmy.addAlienSoldier(As);
 						}
-						else
-							alienArmy.addAlienSoldier(As);
-					}
+				
 					if (earthArmy.getEScount() >= .8 * alienArmy.getAScount())
 						break;
-					am = alienArmy.RemoveAlienMonster(Am);
-					if (am) {
-						i++;
-						Et->Attack(Am);
-						if (Am->getTa() == -1)
-							Am->setTa(timeStep);
-						if (Am->getHealth() <= 0) {
-							Am->setTd(timeStep);
-							addToKilledList(Am);
+					if (i < Et->getAttackCap()) {
+						am = alienArmy.RemoveAlienMonster(Am);
+						if (am) {
+							i++;
+							flag2 = true;
+							Et->Attack(Am);
+							if (Am->getTa() == -1)
+								Am->setTa(timeStep);
+							if (Am->getHealth() <= 0) {
+								Am->setTd(timeStep);
+								addToKilledList(Am);
+							}
+							else
+								alienArmy.addAlienMonster(Am);
 						}
-						else
-							alienArmy.addAlienMonster(Am);
-					}
 
+					}
+					if (!flag1 && !flag2)
+						break;
+					
 				}
 			}
 		}
-		earthArmy.addEarthTank(Es);
+		earthArmy.addEarthTank(Et);
 	}
 	///////////////////////////////////////////////////////////////Gunnery
 	Unit* Eg = nullptr, * Adf = nullptr,*Adl=nullptr;
@@ -294,48 +306,58 @@ void Game::AttackLogic() {
 	am = true;
 	eg = earthArmy.RemoveEarthGunnery(Eg);
 	if (eg) {
-		for (int i = 0; i < Eg->getAttackCap(); i++) {
-			am = alienArmy.RemoveAlienMonster(Am);
-			if (am) {
-				Eg->Attack(Am);
-				if (Am->getTa() == -1)
-					Am->setTa(timeStep);
-				if (Am->getHealth() <= 0) {
-					Am->setTd(timeStep);
-					addToKilledList(Am);
+		for (int i = 0; i < Eg->getAttackCap();) {
+			bool flag1 = false, flag2 = false;
+				am = alienArmy.RemoveAlienMonster(Am);
+				if (am) {
+					i++;
+					flag1 = true;
+					Eg->Attack(Am);
+					if (Am->getTa() == -1)
+						Am->setTa(timeStep);
+					if (Am->getHealth() <= 0) {
+						Am->setTd(timeStep);
+						addToKilledList(Am);
+					}
+					else
+						alienArmy.addAlienMonster(Am);
 				}
-				else
-					alienArmy.addAlienMonster(Am);
-			}
-			adf = alienArmy.RemoveAlienDroneFirst(Adf);
-			adl = alienArmy.RemoveAlienDroneLast(Adl);
-			if (adl && adf) {
-				i++;
-				Eg->Attack(Adf);
-				Eg->Attack(Adl);
-				if (Adf->getTa() == -1)
-					Adf->setTa(timeStep);
-				if (Adl->getTa() == -1)
-					Adl->setTa(timeStep);
-				if (Adf->getHealth() <= 0) {
-					Adf->setTd(timeStep);
-					addToKilledList(Adf);
-				}
-				else
-					alienArmy.addAlienDrone(Adf);
+			
+				if (i < Eg->getAttackCap()) {
+					adf = alienArmy.RemoveAlienDroneFirst(Adf);
+					adl = alienArmy.RemoveAlienDroneLast(Adl);
+					if (adl && adf) {
+						i++;
+						flag2 = true;
+						Eg->Attack(Adf);
+						Eg->Attack(Adl);
+						if (Adf->getTa() == -1)
+							Adf->setTa(timeStep);
+						if (Adl->getTa() == -1)
+							Adl->setTa(timeStep);
+						if (Adf->getHealth() <= 0) {
+							Adf->setTd(timeStep);
+							addToKilledList(Adf);
+						}
+						else
+							alienArmy.addAlienDrone(Adf);
 
-				if (Adl->getHealth() <= 0) {
-					Adl->setTd(timeStep);
-					addToKilledList(Adl);
+						if (Adl->getHealth() <= 0) {
+							Adl->setTd(timeStep);
+							addToKilledList(Adl);
+						}
+						else
+							alienArmy.addAlienDrone(Adl);
+					}
 				}
-				else
-					alienArmy.addAlienDrone(Adl);
-			}
-
+					if (!flag1 && !flag2)
+						break;
+			
 		}
-		earthArmy.addEarthGunnery(Eg);
+			earthArmy.addEarthGunnery(Eg);
+	
 	}
-	//////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////aliensolider
 	{
 
 		Unit* Es = nullptr, * As = nullptr;
@@ -364,7 +386,7 @@ void Game::AttackLogic() {
 			alienArmy.addAlienSoldier(As);
 		}
 	}
-	///////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////monster
 	{
 
 		Unit* Am = nullptr, * Es = nullptr, * Et = nullptr;
@@ -373,15 +395,14 @@ void Game::AttackLogic() {
 		am = alienArmy.RemoveAlienMonster(Am);
 		if (am)
 		{
-			for (int i = 0; i < Am->getAttackCap(); i++)
+			for (int i = 0; i < Am->getAttackCap(); )
 			{
+				bool flag1 = false, flag2 = false;
 				es = earthArmy.RemoveEarthSoldier(Es);
-				et = earthArmy.RemoveEarthTank(Et);
-				if (am)
-				{
+				if (es) {
+					i++;
+					flag1 = true;
 					Am->Attack(Es);
-					Am->Attack(Et);
-
 					if (Es->getTa() == -1)Es->setTa(timeStep);
 					if (Es->getHealth() <= 0)
 					{
@@ -392,20 +413,28 @@ void Game::AttackLogic() {
 					{
 						TempList.enqueue(Es);
 					}
-					if (Et->getTa() == -1)Es->setTa(timeStep);
-					if (Et->getHealth() <= 0)
-					{
-						if (Et->getTd() == -1)Et->setTd(timeStep);
-						addToKilledList(Et);
+				}
+				if (i < Am->getAttackCap()) {
+					et = earthArmy.RemoveEarthTank(Et);
+					if (et) {
+						i++;
+						flag2 = true;
+						Am->Attack(Et);
+						if (Et->getTa() == -1)Es->setTa(timeStep);
+						if (Et->getHealth() <= 0)
+						{
+							if (Et->getTd() == -1)Et->setTd(timeStep);
+							addToKilledList(Et);
+						}
+						else
+						{
+							TempList.enqueue(Et);
+						}
 					}
-					else
-					{
-						TempList.enqueue(Et);
-					}
-
-
 				}
 
+					if (!flag1 && !flag2)
+						break;
 
 			}
 			alienArmy.addAlienSoldier(Am);
@@ -414,7 +443,7 @@ void Game::AttackLogic() {
 
 	{
 		int capacity;
-		///////////////////////////////////////////////
+		///////////////////////////////////////////////////////////////////////////Drones
 		Unit* Ad1 = nullptr, * Ad2 = nullptr, * Eg = nullptr, * Et = nullptr;
 		bool ad1 = true, ad2 = true, eg = true, et = true;
 
@@ -424,42 +453,51 @@ void Game::AttackLogic() {
 		else capacity = Ad2->getAttackCap();
 		if (ad1 && ad2)
 		{
-			for (int i = 0; i < capacity; i++)
+			for (int i = 0; i < capacity; )
 			{
+				bool flag1 = false, flag2 = false;
 				eg = earthArmy.RemoveEarthSoldier(Eg);
+				
+				if (eg) {
+					i++;
+					flag1 = true;
+					Ad1->Attack(Eg);
+					Ad2->Attack(Eg);
+					if (Eg->getTa() == -1)  Eg->setTa(timeStep);
+					if (Eg->getHealth() <= 0)
+					{
+						if (Eg->getTd() == -1)Eg->setTd(timeStep);
+						addToKilledList(Eg);
+					}
+					else
+					{
+						TempList.enqueue(Eg);
+					}
+				}
+				if(i < capacity){
 				et = earthArmy.RemoveEarthTank(Et);
-
-
-				Ad1->Attack(Eg);
-				Ad2->Attack(Eg);
-				Ad1->Attack(Et);
-				Ad2->Attack(Et);
-
-				if (Eg->getTa() == -1)  Eg->setTa(timeStep);
-				if (Eg->getHealth() <= 0)
-				{
-					if (Eg->getTd() == -1)Eg->setTd(timeStep);
-					addToKilledList(Eg);
-				}
-				else
-				{
-					TempList.enqueue(Eg);
-				}
-
-				if (Et->getTa() == -1)Et->setTa(timeStep);
-				if (Et->getHealth() <= 0)
-				{
-					if (Et->getTd() == -1)Et->setTd(timeStep);
-					addToKilledList(Et);
-				}
-				else
-				{
-					TempList.enqueue(Et);
+				if (et) {
+					i++;
+					flag2 = true;
+					Ad1->Attack(Et);
+					Ad2->Attack(Et);
+					if (Et->getTa() == -1)Et->setTa(timeStep);
+					if (Et->getHealth() <= 0)
+					{
+						if (Et->getTd() == -1)Et->setTd(timeStep);
+						addToKilledList(Et);
+					}
+					else
+					{
+						TempList.enqueue(Et);
+					}
 				}
 			}
-			alienArmy.addAlienSoldier(Ad1);
-			alienArmy.addAlienSoldier(Ad2);
+				if (!flag1 && !flag2)
+					break;
 
 		}
+			alienArmy.addAlienSoldier(Ad1);
+			alienArmy.addAlienSoldier(Ad2);
 	}
 }
