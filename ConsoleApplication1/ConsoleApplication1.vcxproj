@@ -131,6 +131,7 @@
     <ClCompile Include="AlienDrone.cpp" />
     <ClCompile Include="AlienMonster.cpp" />
     <ClCompile Include="AlienSoldier.cpp" />
+    <ClCompile Include="HEAL.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="EarthArmy.cpp" />
     <ClCompile Include="EarthSoldier.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="EarthTank.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Gunnery.h" />
+    <ClInclude Include="HEAL.h" />
     <ClInclude Include="LinkedQueue.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="priNode.h" />

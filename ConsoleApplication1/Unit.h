@@ -8,11 +8,12 @@ using namespace std;
 
 class Unit {
 private:
-	enum TYPE {ES,ET,EG,AS,AM,AD};
+	enum TYPE {ES,ET,EG,AS,AM,AD,HU};
 	int ID;
 	int Tj,Ta,Td,Health,Power;
 	int AttackCap;
 	int type;
+	int initialhealth,timeUml;
 public:
 	Unit(double h=0, double pw=0, double AC=0, int tj=0);
 	virtual void Attack(Unit*&);
@@ -31,6 +32,10 @@ public:
 	int getTYPE()const;
 	void setAttackCap(int x);
 	int getAttackCap()const;
+	int getinitialhealth()const;
+	void setinitialhealth(int);
+	int gettimeUml()const;
+	void settimeUml(int);
 	friend ostream& operator << (ostream& , Unit *u);
 };
 

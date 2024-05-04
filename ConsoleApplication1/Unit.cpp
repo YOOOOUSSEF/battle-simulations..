@@ -7,6 +7,8 @@ Unit::Unit(double h, double pw, double AC, int tj) :Health(h), Power(pw), Attack
 	ID = -1;
 	setTa(-1);
 	setTd(-1);
+	initialhealth = Health;
+	timeUml = -1;
 }
 
 void Unit::Attack(Unit*&a)
@@ -80,6 +82,19 @@ int Unit::getTa()const {
 }
 int Unit::getTd()const {
 	return Td;
+}
+
+int Unit::getinitialhealth()const {
+	return initialhealth;
+}
+void Unit::setinitialhealth(int h) {
+	initialhealth = h;
+}
+int Unit::gettimeUml()const {
+	return timeUml;
+}
+void Unit::settimeUml(int p) {
+	timeUml = p;
 }
 
 ostream& operator<<(ostream& out, Unit* u)

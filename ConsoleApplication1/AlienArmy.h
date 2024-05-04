@@ -10,7 +10,7 @@ private:
 	 LinkedQueue<Unit*> AlienSoldiers;
 	DoubleLinkedQueue<Unit*> AlienDrones;
 	 Unit* AlienMonsters[MAX_LEN];
-	int id;
+	 int id;
 	int AScount;
 	int ADcount;
 	int AMcount;
@@ -18,6 +18,7 @@ public:
 	AlienArmy();
 	void addAlienSoldier(Unit* Soldier);
 	void addAlienDrone(Unit* Drone);
+	void addAlienDroneFirst(Unit* Drone);
     bool addAlienMonster(Unit* Monster);
 	bool RemoveAlienSoldier(Unit*& Soldier);
 	bool RemoveAlienDroneFirst(Unit*& Drone);

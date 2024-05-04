@@ -19,19 +19,21 @@ Game::Game()
 		if(R.GenerateA(Prob))//generate randomA from randGen
 			for (int i = 0; i < N; i++) 
 			{
-				Unit* u = R.GenEarthUnit(ES,ET,EG,SmallPowerES,HighPowerES,SmallPowerET,HighPowerET,SmallPowerEG,HighPowerEG);//generating an earth unit
+				Unit* u = R.GenEarthUnit(ES,ET,EG,HU, SmallHealthE, HighHealthE, SmallPowerE, HighPowerE, SmallAttackCapE, HighAttackCapE);//generating an earth unit
 				u->setTJ(timeStep);
 				if (u->getTYPE() == 0)// if ES
 					earthArmy.addEarthSoldier(u);//add to earth soldiers queue
 				else if (u->getTYPE() == 1)//if ET
 					earthArmy.addEarthTank(u);//add to earth Tanks stack
-				else earthArmy.addEarthGunnery(u);//add to earth Gunnerys pri queue
+				else if (u->getTYPE() == 2) earthArmy.addEarthGunnery(u);//add to earth Gunnerys pri queue
+				else
+					HealList.push(u);                          //add Heal Unit to HealList
 			}
 		
 
 		if (R.GenerateA(Prob))//generate randomB for randGen
 			for (int i = 0; i < N; i++) {
-				Unit* u = R.GenAlienUnit(AS,AM , AD, SmallPowerAS, HighPowerAS, SmallPowerAM, HighPowerAM, SmallPowerAD, HighPowerAD);//generating an alien unit
+				Unit* u = R.GenAlienUnit(AS,AM , AD, SmallHealthA, HighHealthA, SmallPowerA, HighPowerA, SmallAttackCapA, HighAttackCapA);//generating an alien unit
 				u->setTJ(timeStep);
 				if (u->getTYPE() == 3)//if AS
 					alienArmy.addAlienSoldier(u);//add to alien solders queue
@@ -40,7 +42,7 @@ Game::Game()
 				else alienArmy.addAlienDrone(u);//add to alien drones doubly linked queue of drones
 			}
 
-		TEST();//calling the testing fuction
+		//TEST();//calling the testing fuction
 		cout << "Current Timestep " << timeStep << endl;//cout current time Step
 		cout << "============== Earth Army Alive Units ============== " << endl;//printing earth army lists
         earthArmy.printEarthSoldiers();
@@ -63,15 +65,15 @@ Game::Game()
 void Game::LoadFromFile(char filename[]) {
 	ifstream file;//opening a input file
 	file.open(filename, ios::in);
-		file >> N >> ES >> ET >> EG >> AS >> AM >> AD >> Prob;//assigning the loading parameters for generation of units
-		file >> SmallPowerES >> HighPowerES >> SmallPowerET >>  HighPowerET >> SmallPowerEG >> HighPowerEG;//high a low value limits of every type units
-		file >> SmallPowerAS >> HighPowerAS >> SmallPowerAM >>  HighPowerAM >> SmallPowerAD >> HighPowerAD;
-		HighPowerES = -HighPowerES;//removing the minus sign of the high value
-		HighPowerET = -HighPowerET;
-		HighPowerEG = -HighPowerEG;
-		HighPowerAS = -HighPowerAS;
-		HighPowerAM = -HighPowerAM;
-		HighPowerAD = -HighPowerAD;
+		file >> N >> ES >> ET >> EG >>HU>> AS >> AM >> AD >> Prob;//assigning the loading parameters for generation of units
+		file >> SmallPowerE >> HighPowerE >> SmallHealthE >>  HighHealthE >> SmallAttackCapE >> HighAttackCapE;//high a low value limits of every type units
+		file >> SmallPowerA >> HighPowerA >> SmallHealthA >> HighHealthA >> SmallAttackCapA >> HighAttackCapA;
+		HighPowerE = -HighPowerE;//removing the minus sign of the high value
+		HighPowerA = -HighPowerA;
+		HighHealthE = -HighHealthE;
+		HighHealthA = -HighHealthA;
+		HighAttackCapA = -HighAttackCapA;
+		HighAttackCapE = -HighAttackCapE;
 		file.close();
 	
 }
@@ -90,7 +92,7 @@ void Game::PrintKilledList() const
 	cout << endl;
 }
 
-void Game::TEST()
+/*void Game::TEST()
 {
 	
 	int X = rand()%100+1;//rand x from 1 to 100
@@ -209,10 +211,12 @@ void Game::TEST()
 	}
 
 
-}
+}*/
 
 void Game::AttackLogic() {
 	////////////////////////////////////////////////////////////solider
+	LinkedQueue<Unit*> TempList;
+
 	Unit* Es = nullptr, * As = nullptr;
 	bool as = true, es = true;
 	es = earthArmy.RemoveEarthSoldier(Es);
@@ -227,11 +231,17 @@ void Game::AttackLogic() {
 					As->setTd(timeStep);
 					addToKilledList(As);
 				}
-				else
+				else 
 					TempList.enqueue(As);
+				
 			}
 		}
 		earthArmy.addEarthSoldier(Es);
+	}
+	while (!TempList.isEmpty()) {
+		Unit* unit = nullptr;
+		TempList.dequeue(unit);
+		alienArmy.addAlienSoldier(unit);
 	}
 	//////////////////////////////////////////////////////////tank
 	Unit* Et = nullptr, * Am = nullptr;
@@ -299,6 +309,14 @@ void Game::AttackLogic() {
 		}
 		earthArmy.addEarthTank(Et);
 	}
+	while (!TempList.isEmpty()) {
+		Unit* unit = nullptr;
+		TempList.dequeue(unit);
+		if (unit->getTYPE() == 3)
+			alienArmy.addAlienSoldier(unit);
+		else
+			alienArmy.addAlienMonster(unit);
+	}
 	///////////////////////////////////////////////////////////////Gunnery
 	Unit* Eg = nullptr, * Adf = nullptr, * Adl = nullptr;
 	Am = nullptr;
@@ -355,7 +373,14 @@ void Game::AttackLogic() {
 
 		}
 		earthArmy.addEarthGunnery(Eg);
-
+	}
+	while (!TempList.isEmpty()) {
+		Unit* unit = nullptr;
+		TempList.dequeue(unit);
+		if (unit->getTYPE() == 4)
+			alienArmy.addAlienMonster(unit);
+		else
+			alienArmy.addAlienDrone(unit);
 	}
 	//////////////////////////////////////////////////////////aliensolider
 	{
@@ -377,6 +402,10 @@ void Game::AttackLogic() {
 						if (Es->getTd() == -1)Es->setTd(timeStep);
 						addToKilledList(Es);
 					}
+					else if (Es->getHealth() < .2 * Es->getinitialhealth()) {
+						Es->settimeUml(timeStep);
+						Uml1.enqueue(Es, 10000 - Es->getHealth());
+					}
 					else
 					{
 						TempList.enqueue(Es);
@@ -385,6 +414,11 @@ void Game::AttackLogic() {
 			}
 			alienArmy.addAlienSoldier(As);
 		}
+	}
+	while (!TempList.isEmpty()) {
+		Unit* unit = nullptr;
+		TempList.dequeue(unit);
+			earthArmy.addEarthSoldier(unit);
 	}
 	///////////////////////////////////////////////////////////////////monster
 	{
@@ -409,6 +443,10 @@ void Game::AttackLogic() {
 						Es->setTd(timeStep);
 						addToKilledList(Es);
 					}
+					else if (Es->getHealth() < .2 * Es->getinitialhealth()) {
+						Es->settimeUml(timeStep);
+						Uml1.enqueue(Es, 10000 - Es->getHealth());
+					}
 					else
 					{
 						TempList.enqueue(Es);
@@ -426,6 +464,10 @@ void Game::AttackLogic() {
 							if (Et->getTd() == -1)Et->setTd(timeStep);
 							addToKilledList(Et);
 						}
+						else if (Et->getHealth() < .2 * Et->getinitialhealth()) {
+							Et->settimeUml(timeStep);
+							Uml2.enqueue(Et);
+						}
 						else
 						{
 							TempList.enqueue(Et);
@@ -437,8 +479,16 @@ void Game::AttackLogic() {
 					break;
 
 			}
-			alienArmy.addAlienSoldier(Am);
+			alienArmy.addAlienMonster(Am);
 		}
+	}
+	while (!TempList.isEmpty()) {
+		Unit* unit = nullptr;
+		TempList.dequeue(unit);
+		if (unit->getTYPE() == 0)
+			earthArmy.addEarthSoldier(unit);
+		else
+			earthArmy.addEarthTank(unit);
 	}
 
 	{
@@ -487,6 +537,10 @@ void Game::AttackLogic() {
 							if (Et->getTd() == -1)Et->setTd(timeStep);
 							addToKilledList(Et);
 						}
+						else if (Et->getHealth() < .2 * Et->getinitialhealth()) {
+							Et->settimeUml(timeStep);
+							Uml2.enqueue(Et);
+						}
 						else
 						{
 							TempList.enqueue(Et);
@@ -497,8 +551,67 @@ void Game::AttackLogic() {
 					break;
 
 			}
-			alienArmy.addAlienSoldier(Ad1);
-			alienArmy.addAlienSoldier(Ad2);
+			alienArmy.addAlienDroneFirst(Ad1);
+			alienArmy.addAlienDrone(Ad2);
 		}
 	}
+	while (!TempList.isEmpty()) {
+		Unit* unit = nullptr;
+		TempList.dequeue(unit);
+		if (unit->getTYPE() == 1)
+			earthArmy.addEarthTank(unit);
+		else
+			earthArmy.addEarthGunnery(unit);
+	}
+}
+
+void Game::HealLogic() {
+	LinkedQueue<Unit*>TempListforsoilder;
+	LinkedQueue<Unit*>TempListfortank;
+	int f;
+	Unit* healunit = nullptr,*healed=nullptr;
+
+	if (HealList.pop(healunit)) 
+		for (int i = 0; i < healunit->getAttackCap(); i++) {
+			if (Uml1.dequeue(healed, f)) {
+				if (timeStep - healed->gettimeUml() > 10) {
+					addToKilledList(healed);
+					continue;
+				}
+				healunit->Attack(healed);
+				if (healed->getHealth() > .2 * healed->getinitialhealth()) {
+					earthArmy.addEarthSoldier(healed);
+					healed->settimeUml(-1);
+				}
+				else {
+					TempListforsoilder.enqueue(healed);
+					healed->settimeUml(timeStep);
+				}
+
+			}
+			else if (Uml2.dequeue(healed)) {
+				if (timeStep - healed->gettimeUml() > 10) {
+					addToKilledList(healed);
+					continue;
+				}
+				healunit->Attack(healed);
+				if (healed->getHealth() > .2 * healed->getinitialhealth()) {
+					earthArmy.addEarthTank(healed);
+					healed->settimeUml(-1);
+				}
+				else {
+					TempListfortank.enqueue(healed);
+					healed->settimeUml(timeStep);
+				}
+			}
+			else
+				break;
+		}
+	Unit* deleter = nullptr;
+	while (TempListfortank.dequeue(deleter)) 
+		Uml2.enqueue(deleter);
+	
+	while (TempListforsoilder.dequeue(deleter))
+		Uml1.enqueue(deleter, 10000 - deleter->getHealth());
+	
 }

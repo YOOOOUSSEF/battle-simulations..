@@ -1,5 +1,6 @@
 #include "randGen.h"
 #include "cstdlib"
+#include"HEAL.h"
 randGen::randGen()
 {
 	A = 0;
@@ -18,7 +19,7 @@ int randGen::getRandBetween(int low, int high)
 	return rand()%(high - low +1)+low;
 }
 
-Unit* randGen::GenEarthUnit(int ESpercent, int ETpercent, int EGpercent, int ESsmall, int EShigh, int ETsmall, int EThigh, int EGsmall ,int EGhigh)
+Unit* randGen::GenEarthUnit(int ESpercent, int ETpercent, int EGpercent,int HUpercent, int smallHealth, int highHealth, int smallPower, int highPower, int smallAttackCap ,int highAttackCap)
 {
 
 
@@ -28,11 +29,11 @@ Unit* randGen::GenEarthUnit(int ESpercent, int ETpercent, int EGpercent, int ESs
 		RandUnit = new EarthSoldier();//generate a new earth Soldier
 		RandUnit->settype(0);//set its type to ES
 		//then generating random power , health and ATCapcity//
-		int tempPower = getRandBetween(ESsmall,EShigh);
+		int tempPower = getRandBetween(smallPower,highPower);
 		RandUnit->setPower(tempPower);
-		int tempHealth = getRandBetween(ESsmall, EShigh);
+		int tempHealth = getRandBetween(smallHealth, highHealth);
 		RandUnit->setHealth(tempHealth);
-		int tempATCap = getRandBetween(ESsmall, EShigh);
+		int tempATCap = getRandBetween(smallAttackCap, highAttackCap);
 		RandUnit->setAttackCap(tempATCap);
 		///////////////////
 		return RandUnit;
@@ -42,31 +43,43 @@ Unit* randGen::GenEarthUnit(int ESpercent, int ETpercent, int EGpercent, int ESs
 		RandUnit = new EarthTank();//generate a new earth tank
 		RandUnit->settype(1);//set its type to ET
 		//then generating random power , health and ATCapcity//
-		int tempPower = getRandBetween(ETsmall, EThigh);
+		int tempPower = getRandBetween(smallPower, highPower);
 		RandUnit->setPower(tempPower);
-		int tempHealth = getRandBetween(ETsmall, EThigh);
+		int tempHealth = getRandBetween(smallHealth, highHealth);
 		RandUnit->setHealth(tempHealth);
-		int tempATCap = getRandBetween(ETsmall, EThigh);
+		int tempATCap = getRandBetween(smallAttackCap, highAttackCap);
 		RandUnit->setAttackCap(tempATCap);
 		return RandUnit;
 	}
 
-	else
+	else if(B<= ESpercent + ETpercent+EGpercent)
 	{
-		RandUnit = new Gunnery();//generte a gunnery
-		RandUnit->settype(2);//set its type to EarthGunnery
+		RandUnit = new Gunnery();//generate a new earth Gunnery
+		RandUnit->settype(1);//set its type to ET
 		//then generating random power , health and ATCapcity//
-		int tempPower = getRandBetween(EGsmall, EGhigh);
+		int tempPower = getRandBetween(smallPower, highPower);
 		RandUnit->setPower(tempPower);
-		int tempHealth = getRandBetween(EGsmall, EGhigh);
+		int tempHealth = getRandBetween(smallHealth, highHealth);
 		RandUnit->setHealth(tempHealth);
-		int tempATCap = getRandBetween(EGsmall, EGhigh);
+		int tempATCap = getRandBetween(smallAttackCap, highAttackCap);
+		RandUnit->setAttackCap(tempATCap);
+		return RandUnit;
+	}
+	else {
+		RandUnit = new HEAL();//generte a HEAL Unit
+		RandUnit->settype(6);//set its type to EarthGunnery
+		//then generating random power , health and ATCapcity//
+		int tempPower = getRandBetween(smallPower, highPower);
+		RandUnit->setPower(tempPower);
+		int tempHealth = getRandBetween(smallHealth, highHealth);
+		RandUnit->setHealth(tempHealth);
+		int tempATCap = getRandBetween(smallAttackCap, highAttackCap);
 		RandUnit->setAttackCap(tempATCap);
 		return RandUnit;
 	}
 }
 
-Unit* randGen::GenAlienUnit(int ASpercent, int AMpercent, int ADpercent, int ASsmall, int AShigh, int AMsmall, int AMhigh, int ADsmall, int ADhigh)
+Unit* randGen::GenAlienUnit(int ASpercent, int AMpercent, int ADpercent, int smallHealth, int highHealth, int smallPower, int highPower, int smallAttackCap, int highAttackCap)
 {
 
 	B = rand() % 100 + 1;//generate random number from 1 to 100
@@ -76,11 +89,11 @@ Unit* randGen::GenAlienUnit(int ASpercent, int AMpercent, int ADpercent, int ASs
 		//set type to alien Soldier
 		RandUnit->settype(3);//
 		//then generating random power , health and ATCapcity//
-		int tempPower = getRandBetween(ASsmall, AShigh);
+		int tempPower = getRandBetween(smallPower, highPower);
 		RandUnit->setPower(tempPower);
-		int tempHealth = getRandBetween(ASsmall, AShigh);
+		int tempHealth = getRandBetween(smallHealth, highHealth);
 		RandUnit->setHealth(tempHealth);
-		int tempATCap = getRandBetween(ASsmall, AShigh);
+		int tempATCap = getRandBetween(smallAttackCap, highAttackCap);
 		RandUnit->setAttackCap(tempATCap);
 		return RandUnit;
 	}
@@ -89,13 +102,13 @@ Unit* randGen::GenAlienUnit(int ASpercent, int AMpercent, int ADpercent, int ASs
 		RandUnit = new AlienMonster();
 		RandUnit->settype(4);//set type to alien monster
 		//then generating random power , health and ATCapcity//
-		int tempPower = getRandBetween(AMsmall, AMhigh);
+		int tempPower = getRandBetween(smallPower, highPower);
 		RandUnit->setPower(tempPower);
-		int tempHealth = getRandBetween(AMsmall, AMhigh);
+		int tempHealth = getRandBetween(smallHealth, highHealth);
 		RandUnit->setHealth(tempHealth);
-		int tempATCap = getRandBetween(AMsmall, AMhigh);
+		int tempATCap = getRandBetween(smallAttackCap, highAttackCap);
 		RandUnit->setAttackCap(tempATCap);
-		return RandUnit;
+		return RandUnit;;
 	}
 
 	else
@@ -103,11 +116,11 @@ Unit* randGen::GenAlienUnit(int ASpercent, int AMpercent, int ADpercent, int ASs
 		RandUnit = new AlienDrone();//generate a new alien drone
 		RandUnit->settype(5);//set type to AD
 		//then generating random power , health and ATCapcity//
-		int tempPower = getRandBetween(ADsmall, ADhigh);
+		int tempPower = getRandBetween(smallPower, highPower);
 		RandUnit->setPower(tempPower);
-		int tempHealth = getRandBetween(ADsmall, ADhigh);
+		int tempHealth = getRandBetween(smallHealth, highHealth);
 		RandUnit->setHealth(tempHealth);
-		int tempATCap = getRandBetween(ADsmall, ADhigh);
+		int tempATCap = getRandBetween(smallAttackCap, highAttackCap);
 		RandUnit->setAttackCap(tempATCap);
 		return RandUnit;
 	}

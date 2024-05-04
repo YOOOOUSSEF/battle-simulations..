@@ -5,6 +5,8 @@ C:\battle_project\ConsoleApplication1\AlienDrone.cpp(12,13): warning C4244: 'ini
 C:\battle_project\ConsoleApplication1\AlienMonster.cpp(10,13): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   AlienSoldier.cpp
 C:\battle_project\ConsoleApplication1\AlienSoldier.cpp(11,13): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+  HEAL.cpp
+C:\battle_project\ConsoleApplication1\HEAL.cpp(9,23): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   main.cpp
 C:\battle_project\ConsoleApplication1\EarthArmy.h(3,9): warning C4067: unexpected tokens following preprocessor directive - expected a newline
   EarthArmy.cpp

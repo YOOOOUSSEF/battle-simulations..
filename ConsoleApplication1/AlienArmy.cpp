@@ -30,6 +30,15 @@ void AlienArmy::addAlienDrone(Unit* Drone)
 	}
 	ADcount++;
 }
+void AlienArmy::addAlienDroneFirst(Unit* Drone) {
+	AlienDrones.enqueuefirst(Drone); // calling the enqueue function of the queue of alienDrones
+	if (Drone->getID() == -1)
+	{
+		Drone->setID(id);
+		id++;
+	}
+	ADcount++;
+}
 
 bool AlienArmy::addAlienMonster(Unit* Monster)
 {

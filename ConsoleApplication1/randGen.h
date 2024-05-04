@@ -15,7 +15,7 @@ public:
 	randGen();
 	bool  GenerateA(int prob);
 	int   getRandBetween(int low, int high);
-	Unit* GenEarthUnit(int ESpercent, int ETpercent, int EGpercent, int ESsmall, int EShigh, int ETsmall, int EThigh, int EGsmall, int EGhigh);
+	Unit* GenEarthUnit(int ESpercent, int ETpercent, int EGpercent,int HUpercent, int ESsmall, int EShigh, int ETsmall, int EThigh, int EGsmall, int EGhigh);
 	Unit* GenAlienUnit(int ASpercent, int AMpercent, int ADpercent, int ASsmall, int AShigh, int AMsmall, int AMhigh, int ADsmall, int ADhigh);
 	
 };

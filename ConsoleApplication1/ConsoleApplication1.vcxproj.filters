@@ -51,6 +51,9 @@
     <ClCompile Include="AlienDrone.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="HEAL.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StackADT.h">
@@ -111,6 +114,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ArrayStack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HEAL.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
