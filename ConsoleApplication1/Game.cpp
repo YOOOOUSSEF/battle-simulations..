@@ -576,6 +576,7 @@ void Game::HealLogic() {
 			if (Uml1.dequeue(healed, f)) {
 				if (timeStep - healed->gettimeUml() > 10) {
 					addToKilledList(healed);
+					i--;
 					continue;
 				}
 				healunit->Attack(healed);
@@ -592,6 +593,7 @@ void Game::HealLogic() {
 			else if (Uml2.dequeue(healed)) {
 				if (timeStep - healed->gettimeUml() > 10) {
 					addToKilledList(healed);
+					i--;
 					continue;
 				}
 				healunit->Attack(healed);
