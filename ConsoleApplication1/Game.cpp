@@ -4,7 +4,7 @@
 using namespace std;
 Game::Game()
 {
-	int input;
+	
 	 timeStep = 0;
 	 killedCount = 0;
 	//intialize the data members of the game
@@ -12,9 +12,9 @@ Game::Game()
 	cin >> fileName;//entering the name of file
 	LoadFromFile(fileName);//calling loading file function
 	cout << "enter any any Number except -1 to start " << endl;
-	cin >> input;//while(the input is not -1) the function will continue
+	
 	srand(time(NULL));
-	while (input != -1||timeStep==50)
+	while (timeStep!=50)
 	{
 		if(R.GenerateA(Prob))//generate randomA from randGen
 			for (int i = 0; i < N; i++) 
@@ -42,23 +42,24 @@ Game::Game()
 				else alienArmy.addAlienDrone(u);//add to alien drones doubly linked queue of drones
 			}
 
-		//TEST();//calling the testing fuction
-		cout << "Current Timestep " << timeStep << endl;//cout current time Step
-		cout << "============== Earth Army Alive Units ============== " << endl;//printing earth army lists
-        earthArmy.printEarthSoldiers();
-		earthArmy.printEarthTanks();
-		earthArmy.printEarthGunnerys();
-		cout << "============== Alien Army Alive Units ============== " << endl;//printing alien army lists
-		alienArmy.printAlienSoldiers();
-		alienArmy.printAlienDrones();
-		alienArmy.printAlienMonsters();
-		cout << "============== Killed/Destructed Units ============= " << endl;
-		PrintKilledList();//printing the killed list of units
-
-		cout << "enter any any Number except -1 to conitnue" << endl;
-		cin >> input;
+		
+		
+			cout << "Current Timestep " << timeStep << endl;//cout current time Step
+			cout << "============== Earth Army Alive Units ============== " << endl;//printing earth army lists
+			earthArmy.printEarthSoldiers();
+			earthArmy.printEarthTanks();
+			earthArmy.printEarthGunnerys();
+			cout << "============== Alien Army Alive Units ============== " << endl;//printing alien army lists
+			alienArmy.printAlienSoldiers();
+			alienArmy.printAlienDrones();
+			alienArmy.printAlienMonsters();
+			cout << "============== Killed/Destructed Units ============= " << endl;
+			PrintKilledList();//printing the killed list of units
+		
+		//cout << "enter any any Number except -1 to conitnue" << endl;
+		//cin >> input;
 		timeStep++;
-		cout << endl;
+		//cout << endl;
 	}
 
 }
