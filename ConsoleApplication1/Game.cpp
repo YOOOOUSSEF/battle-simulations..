@@ -4,8 +4,7 @@
 using namespace std;
 Game::Game()
 {
-	
-	 timeStep = 0;
+	 timeStep= 0;
 	 killedCount = 0;
 	//intialize the data members of the game
 	cout << "enter the file Name" << endl;
@@ -61,21 +60,30 @@ Game::Game()
 		timeStep++;
 		//cout << endl;
 	}
+	
 
 }
+
+
 void Game::LoadFromFile(char filename[]) {
-	ifstream file;//opening a input file
-	file.open(filename, ios::in);
-		file >> N >> ES >> ET >> EG >>HU>> AS >> AM >> AD >> Prob;//assigning the loading parameters for generation of units
-		file >> SmallPowerE >> HighPowerE >> SmallHealthE >>  HighHealthE >> SmallAttackCapE >> HighAttackCapE;//high a low value limits of every type units
-		file >> SmallPowerA >> HighPowerA >> SmallHealthA >> HighHealthA >> SmallAttackCapA >> HighAttackCapA;
-		HighPowerE = -HighPowerE;//removing the minus sign of the high value
-		HighPowerA = -HighPowerA;
-		HighHealthE = -HighHealthE;
-		HighHealthA = -HighHealthA;
-		HighAttackCapA = -HighAttackCapA;
-		HighAttackCapE = -HighAttackCapE;
-		file.close();
+
+	ifstream file; // opening an input file
+	string filePath = string(filename) + ".txt"; // concatenate filename with ".txt"
+	file.open(filePath.c_str(), ios::in); // open the file with the concatenated file path
+	if (!file.is_open()) {
+		cerr << "Error opening file: " << filePath << endl;
+		return;
+	}
+	file >> N >> ES >> ET >> EG >>HU>> AS >> AM >> AD >> Prob;//assigning the loading parameters for generation of units
+	file >> SmallPowerE >> HighPowerE >> SmallHealthE >>  HighHealthE >> SmallAttackCapE >> HighAttackCapE;//high a low value limits of every type units
+	file >> SmallPowerA >> HighPowerA >> SmallHealthA >> HighHealthA >> SmallAttackCapA >> HighAttackCapA;
+	HighPowerE = -HighPowerE;//removing the minus sign of the high value
+	HighPowerA = -HighPowerA;
+	HighHealthE = -HighHealthE;
+	HighHealthA = -HighHealthA;
+	HighAttackCapA = -HighAttackCapA;
+	HighAttackCapE = -HighAttackCapE;
+	file.close();
 	
 }
 
