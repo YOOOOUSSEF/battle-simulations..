@@ -65,7 +65,7 @@ public:
 		{
 			cout << items[i] << ", ";
 		}
-		if(items[0])
+		if(items[0]&&top>=0)
 		cout << items[0];
 	}
 

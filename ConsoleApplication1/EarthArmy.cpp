@@ -6,6 +6,7 @@ EarthArmy::EarthArmy()
 	EScount = 0;
 	EGcount = 0;
 	ETcount = 0;
+	HUcount = 0;
 }
 
 void EarthArmy::addEarthSoldier(Unit* soldier)
@@ -40,6 +41,15 @@ void EarthArmy::addEarthTank(Unit* EarthTank)
 		id++;
 	}
 	ETcount++;
+}
+void EarthArmy::addHealUnit(Unit* HealUnit) {
+	HealList.push(HealUnit);//pushing to HealList Stack
+	if (HealUnit->getID() == -1)//check that we have a new Unit
+	{
+		HealUnit->setID(id);
+		id++;
+	}
+	HUcount++;
 }
 
 bool EarthArmy::RemoveEarthSoldier(Unit*& EarthSoldier)
@@ -79,6 +89,15 @@ bool EarthArmy::RemoveEarthTank(Unit*& EarthTank)
 	ETcount--;
 	return true;
 }
+bool EarthArmy::RemoveHealUnit(Unit*& HealUnit) {
+	if (HealList.isEmpty()) {
+		HealUnit = nullptr;
+		return false;
+	}
+	HealList.pop(HealUnit);
+	HUcount--;
+	return true;
+}
 
 void EarthArmy::printEarthSoldiers()
 {
@@ -102,6 +121,12 @@ void EarthArmy::printEarthGunnerys()
 	EarthGunnerys.print_the_list();
 	cout << "] ";
 	cout << endl;
+}
+
+void EarthArmy::printHealUnits() {
+	cout << HUcount << " HU [";
+	HealList.print_list();
+	cout << "]" << endl;
 }
 
 int EarthArmy::getEScount()

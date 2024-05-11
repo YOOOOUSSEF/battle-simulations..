@@ -19,10 +19,12 @@ private:
 	randGen R;
 	
 	LinkedQueue<Unit*> KilledList;
-	ArrayStack<Unit*>HealList;
+	
 	priQueue<Unit*>Uml1; //for earth soilder
 	LinkedQueue<Unit*>Uml2; //for earth tank
-	int killedCount,timeStep;
+	int killedCount,timeStep, num_of_healed;;
+	int killedcountEs, killedcountEt, killedcountEg, killedcountAs, killedcountAm, killedcountAd;
+	int counterForUML1, counterForUML2;
 	char fileName[100];
 public:
 	Game();
@@ -31,8 +33,11 @@ public:
 	void LoadFromFile(char filename[]);
 	void addToKilledList(Unit* killed);
 	void PrintKilledList() const; 
-	//void TEST();
+	void printQueues(LinkedQueue<Unit*>, LinkedQueue<Unit*>, LinkedQueue<Unit*>, LinkedQueue<Unit*>, LinkedQueue<Unit*>
+	, LinkedQueue<Unit*>, LinkedQueue<Unit*>, LinkedQueue<Unit*>, LinkedQueue<Unit*>, LinkedQueue<Unit*>);
+	void printUML();
 	
-
+	void CreateOutputFile(char filename[],LinkedQueue<Unit*>, LinkedQueue<Unit*>, LinkedQueue<Unit*>, LinkedQueue<Unit*>, LinkedQueue<Unit*>
+		, LinkedQueue<Unit*>, LinkedQueue<Unit*>, LinkedQueue<Unit*>, LinkedQueue<Unit*>, LinkedQueue<Unit*>);
 };
 

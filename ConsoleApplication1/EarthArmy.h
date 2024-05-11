@@ -9,22 +9,27 @@ private:
 	LinkedQueue<Unit*> EarthSoldiers;
 	priQueue<Unit*> EarthGunnerys;
 	ArrayStack<Unit*> EarthTanks;
+	ArrayStack<Unit*>HealList;
 
 	int EScount;
 	int EGcount;
 	int ETcount;
+	int HUcount;
 	int id;
 public:
 	EarthArmy();
 	void addEarthSoldier(Unit* soldier);
 	void addEarthGunnery(Unit* Gunnery);
 	void addEarthTank(Unit* EarthTank);
+	void addHealUnit(Unit* HealUnit);
 	bool RemoveEarthSoldier(Unit*& EarthSoldier);
 	bool RemoveEarthGunnery(Unit*& EarthGunnery);
 	bool RemoveEarthTank(Unit*& EarthTank);
+	bool RemoveHealUnit(Unit*& HealUnit);
 	void printEarthSoldiers();
 	void printEarthTanks();
 	void printEarthGunnerys();
+	void printHealUnits();
 	int  getEScount();
 	int  getETcount();
 	int  getEGcount();

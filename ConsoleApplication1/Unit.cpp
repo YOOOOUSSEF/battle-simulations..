@@ -83,6 +83,9 @@ int Unit::getTa()const {
 int Unit::getTd()const {
 	return Td;
 }
+int Unit::getTj()const {
+	return Tj;
+}
 
 int Unit::getinitialhealth()const {
 	return initialhealth;

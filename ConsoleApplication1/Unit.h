@@ -27,6 +27,7 @@ public:
 	void setTd(int t);
 	int getTa()const;
 	int getTd()const;
+	int getTj()const;
 	int getPower()const;
 	int getHealth()const;
 	int getTYPE()const;

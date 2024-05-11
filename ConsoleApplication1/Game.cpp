@@ -1,11 +1,15 @@
 #include "Game.h"
 #include <fstream>
 #include<iostream>
+#include<string.h>
 using namespace std;
 Game::Game()
 {
+	num_of_healed = 0;
+	counterForUML1 = counterForUML2 = 0;
 	 timeStep= 0;
 	 killedCount = 0;
+	 killedcountEs = killedcountEt = killedcountEg = killedcountAs = killedcountAm = killedcountAd = 0;
 	//intialize the data members of the game
 	cout << "enter the file Name" << endl;
 	cin >> fileName;//entering the name of file
@@ -26,7 +30,7 @@ Game::Game()
 					earthArmy.addEarthTank(u);//add to earth Tanks stack
 				else if (u->getTYPE() == 2) earthArmy.addEarthGunnery(u);//add to earth Gunnerys pri queue
 				else {
-					HealList.push(u);
+					earthArmy.addHealUnit(u);
 				}                          //add Heal Unit to HealList
 			}
 		
@@ -41,26 +45,11 @@ Game::Game()
 					alienArmy.addAlienMonster(u);//add to alien monsters array of pointers
 				else alienArmy.addAlienDrone(u);//add to alien drones doubly linked queue of drones
 			}
+
 		AttackLogic();
-		HealLogic();
-		
-		if (timeStep == 49) {
-			cout << "Current Timestep " << timeStep << endl;//cout current time Step
-			cout << "============== Earth Army Alive Units ============== " << endl;//printing earth army lists
-			earthArmy.printEarthSoldiers();
-			earthArmy.printEarthTanks();
-			earthArmy.printEarthGunnerys();
-			cout << "============== Alien Army Alive Units ============== " << endl;//printing alien army lists
-			alienArmy.printAlienSoldiers();
-			alienArmy.printAlienDrones();
-			alienArmy.printAlienMonsters();
-			cout << "============== Killed/Destructed Units ============= " << endl;
-			PrintKilledList();//printing the killed list of units
-		}
-		//cout << "enter any any Number except -1 to conitnue" << endl;
-		//cin >> input;
+	
 		timeStep++;
-		//cout << endl;
+	
 	}
 	
 
@@ -69,11 +58,19 @@ Game::Game()
 
 void Game::LoadFromFile(char filename[]) {
 
+	char filePath[100];
 	ifstream file; // opening an input file
-	string filePath = string(filename) + ".txt"; // concatenate filename with ".txt"
-	file.open(filePath.c_str(), ios::in); // open the file with the concatenated file path
+	for (int i = 0; i < strlen(filename); i++)
+		filePath[i] = filename[i];
+	filePath[strlen(filename)] = '.';
+	filePath[strlen(filename)+1] = 't';
+	filePath[strlen(filename)+2] = 'x';
+	filePath[strlen(filename)+3] = 't';
+	filePath[strlen(filename)+4] = '\0';
+
+	file.open(filePath, ios::in); // open the file with the concatenated file path
 	if (!file.is_open()) {
-		cerr << "Error opening file: " << filePath << endl;
+		cerr << "Error opening file: " << filename << endl;
 		return;
 	}
 	file >> N >> ES >> ET >> EG >>HU>> AS >> AM >> AD >> Prob;//assigning the loading parameters for generation of units
@@ -93,6 +90,18 @@ void Game::addToKilledList(Unit* killed)
 {
 	KilledList.enqueue(killed);
 	killedCount++;
+if(killed->getTYPE()==0)
+	killedcountEs++;
+if (killed->getTYPE() == 1)
+	killedcountEt++;
+if (killed->getTYPE() == 2)
+	killedcountEg++;
+if (killed->getTYPE() == 3)
+	killedcountAs++;
+if (killed->getTYPE() == 4)
+	killedcountAm++;
+if (killed->getTYPE() == 5)
+	killedcountAd++;
 }
 
 void Game::PrintKilledList() const
@@ -112,11 +121,24 @@ void Game::PrintKilledList() const
 void Game::AttackLogic() {
 	////////////////////////////////////////////////////////////solider
 	LinkedQueue<Unit*> TempList;
+	LinkedQueue<Unit*> AttackedFromES;
+	LinkedQueue<Unit*> AttackedFromETforMonster;
+	LinkedQueue<Unit*> AttackedFromETforSoilder;
+	LinkedQueue<Unit*> AttackedFromEGforMonster;
+	LinkedQueue<Unit*> AttackedFromEGforDrones;
+	LinkedQueue<Unit*> AttackedFromAS;
+	LinkedQueue<Unit*> AttackedFromAMforSoilder;
+	LinkedQueue<Unit*> AttackedFromAMforTank;
+	LinkedQueue<Unit*> AttackedFromADforGunnery;
+	LinkedQueue<Unit*> AttackedFromADforTank;
+
 
 	Unit* Es = nullptr, * As = nullptr;
 	bool as = true, es = true;
 	es = earthArmy.RemoveEarthSoldier(Es);
 	if (es) {
+		if (timeStep == 49)
+		AttackedFromES.enqueue(Es);//the attacker unit
 		for (int i = 0; i < Es->getAttackCap(); i++) {
 			as = alienArmy.RemoveAlienSoldier(As);
 			if (as) {
@@ -129,6 +151,8 @@ void Game::AttackLogic() {
 				}
 				else 
 					TempList.enqueue(As);
+				if (timeStep == 49)
+				AttackedFromES.enqueue(As);//List for printing the last attacked As
 				
 			}
 		}
@@ -145,6 +169,8 @@ void Game::AttackLogic() {
 	bool et = true, am = true;
 	et = earthArmy.RemoveEarthTank(Et);
 	if (et) {
+		if (timeStep == 49)
+		AttackedFromETforMonster.enqueue(Et);//the Attacker unit
 		for (int i = 0; i < Et->getAttackCap(); i++) {
 
 			am = alienArmy.RemoveAlienMonster(Am);
@@ -159,6 +185,8 @@ void Game::AttackLogic() {
 				}
 				else
 					TempList.enqueue(Am);
+				if (timeStep == 49)
+				AttackedFromETforMonster.enqueue(Am);//List for printing the last attacked Am by ET
 			}
 			if (earthArmy.getEScount() < .3 * alienArmy.getAScount()) {
 				for (; i < Et->getAttackCap(); ) {
@@ -176,6 +204,8 @@ void Game::AttackLogic() {
 						}
 						else
 							TempList.enqueue(As);
+						if (timeStep == 49)
+						AttackedFromETforSoilder.enqueue(As);//List for printing the last attacked As
 					}
 
 					if (earthArmy.getEScount() >= .8 * alienArmy.getAScount())
@@ -194,6 +224,8 @@ void Game::AttackLogic() {
 							}
 							else
 								TempList.enqueue(Am);
+							if (timeStep == 49)
+							AttackedFromETforMonster.enqueue(Am);//List for printing the last attacked Am by ET
 						}
 
 					}
@@ -220,6 +252,8 @@ void Game::AttackLogic() {
 	am = true;
 	eg = earthArmy.RemoveEarthGunnery(Eg);
 	if (eg) {
+		if (timeStep == 49)
+		AttackedFromEGforMonster.enqueue(Eg);//the Attacker unit
 		for (int i = 0; i < Eg->getAttackCap();) {
 			bool flag1 = false, flag2 = false;
 			am = alienArmy.RemoveAlienMonster(Am);
@@ -235,6 +269,8 @@ void Game::AttackLogic() {
 				}
 				else
 					TempList.enqueue(Am);
+				if (timeStep == 49)
+				AttackedFromEGforMonster.enqueue(Am);//List for printing the last attacked Am by EG
 			}
 
 			if (i < Eg->getAttackCap()) {
@@ -253,6 +289,8 @@ void Game::AttackLogic() {
 						}
 						else
 							TempList.enqueue(Adl);
+						if (timeStep == 49)
+						AttackedFromEGforDrones.dequeue(Adl);//List for printing the last attacked AD
 					}
 					if (adf) {
 						Eg->Attack(Adf);
@@ -266,6 +304,8 @@ void Game::AttackLogic() {
 						}
 						else
 							TempList.enqueue(Adf);
+						if (timeStep == 49)
+						AttackedFromEGforDrones.dequeue(Adf);//List for printing the last attacked AD
 					}
 					}
 				
@@ -292,6 +332,8 @@ void Game::AttackLogic() {
 		as = alienArmy.RemoveAlienSoldier(As);
 		if (as)
 		{
+			if (timeStep == 49)
+				AttackedFromAS.enqueue(As);//the Attacker unit
 			for (int i = 0; i < As->getAttackCap(); i++)
 			{
 				es = earthArmy.RemoveEarthSoldier(Es);
@@ -307,11 +349,14 @@ void Game::AttackLogic() {
 					else if (Es->getHealth() < .2 * Es->getinitialhealth()) {
 						Es->settimeUml(timeStep);
 						Uml1.enqueue(Es, 10000 - Es->getHealth());
+						counterForUML1++;
 					}
 					else
 					{
 						TempList.enqueue(Es);
 					}
+					if (timeStep == 49)
+						AttackedFromAS.enqueue(Es);//List for printing the last attacked ES by AS
 				}
 			}
 			alienArmy.addAlienSoldier(As);
@@ -331,6 +376,9 @@ void Game::AttackLogic() {
 		am = alienArmy.RemoveAlienMonster(Am);
 		if (am)
 		{
+			if (timeStep == 49)
+			AttackedFromAMforSoilder.enqueue(Am);//the Attacker unit
+
 			for (int i = 0; i < Am->getAttackCap(); )
 			{
 				bool flag1 = false, flag2 = false;
@@ -348,11 +396,14 @@ void Game::AttackLogic() {
 					else if (Es->getHealth() < .2 * Es->getinitialhealth()) {
 						Es->settimeUml(timeStep);
 						Uml1.enqueue(Es, 10000 - Es->getHealth());
+						counterForUML1++;
 					}
 					else
 					{
 						TempList.enqueue(Es);
 					}
+					if (timeStep == 49)
+						AttackedFromAMforSoilder.enqueue(Es);//List for printing the last attacked ES by AM
 				}
 				if (i < Am->getAttackCap()) {
 					et = earthArmy.RemoveEarthTank(Et);
@@ -369,11 +420,14 @@ void Game::AttackLogic() {
 						else if (Et->getHealth() < .2 * Et->getinitialhealth()) {
 							Et->settimeUml(timeStep);
 							Uml2.enqueue(Et);
+							counterForUML2++;
 						}
 						else
 						{
 							TempList.enqueue(Et);
 						}
+						if (timeStep == 49)
+							AttackedFromAMforTank.enqueue(Et);//List for printing the last attacked ET by AM
 					}
 				}
 
@@ -403,6 +457,10 @@ void Game::AttackLogic() {
 		ad2 = alienArmy.RemoveAlienDroneLast(Ad2);
 		if (ad1 && ad2)
 		{
+			if (timeStep == 49) {
+				AttackedFromADforGunnery.enqueue(Ad1);//the attacker units
+				AttackedFromADforGunnery.enqueue(Ad2);//the attacker units
+			}
 		if (Ad1->getAttackCap() < Ad2->getAttackCap()) capacity = Ad1->getAttackCap();
 		else capacity = Ad2->getAttackCap();
 	
@@ -426,6 +484,8 @@ void Game::AttackLogic() {
 					{
 						TempList.enqueue(Eg);
 					}
+					if(timeStep==49)
+					AttackedFromADforGunnery.enqueue(Eg);//List for printing the last attacked EG by AD
 				}
 				if (i < capacity) {
 					et = earthArmy.RemoveEarthTank(Et);
@@ -443,11 +503,14 @@ void Game::AttackLogic() {
 						else if (Et->getHealth() < .2 * Et->getinitialhealth()) {
 							Et->settimeUml(timeStep);
 							Uml2.enqueue(Et);
+							counterForUML2++;
 						}
 						else
 						{
 							TempList.enqueue(Et);
 						}
+						if (timeStep == 49)
+							AttackedFromADforTank.enqueue(Et);//List for printing the last attacked Et by AD
 					}
 				}
 				if (!flag1 && !flag2)
@@ -466,6 +529,21 @@ void Game::AttackLogic() {
 		else
 			earthArmy.addEarthGunnery(unit);
 	}
+
+
+
+
+
+	HealLogic();
+
+
+	if (timeStep == 49) {
+		char f[] = "youssef";
+		CreateOutputFile(f, AttackedFromES, AttackedFromETforMonster, AttackedFromETforSoilder, AttackedFromEGforMonster, AttackedFromEGforDrones
+			, AttackedFromAS, AttackedFromAMforSoilder, AttackedFromAMforTank, AttackedFromADforGunnery, AttackedFromADforTank);
+		printQueues(AttackedFromES, AttackedFromETforMonster, AttackedFromETforSoilder, AttackedFromEGforMonster, AttackedFromEGforDrones
+			, AttackedFromAS, AttackedFromAMforSoilder, AttackedFromAMforTank, AttackedFromADforGunnery, AttackedFromADforTank);
+	}
 }
 
 void Game::HealLogic() {
@@ -474,15 +552,17 @@ void Game::HealLogic() {
 	int f;
 	Unit* healunit = nullptr,*healed=nullptr;
 
-	if (HealList.pop(healunit)) 
+	if (earthArmy.RemoveHealUnit(healunit)) 
 		for (int i = 0; i < healunit->getAttackCap(); i++) {
 			if (Uml1.dequeue(healed, f)) {
+				counterForUML1--;
 				if (timeStep - healed->gettimeUml() > 10) {
 					addToKilledList(healed);
 					i--;
 					continue;
 				}
 				healunit->Attack(healed);
+				num_of_healed++;
 				if (healed->getHealth() > .2 * healed->getinitialhealth()) {
 					earthArmy.addEarthSoldier(healed);
 					healed->settimeUml(-1);
@@ -494,12 +574,14 @@ void Game::HealLogic() {
 
 			}
 			else if (Uml2.dequeue(healed)) {
+				counterForUML2--;
 				if (timeStep - healed->gettimeUml() > 10) {
 					addToKilledList(healed);
 					i--;
 					continue;
 				}
 				healunit->Attack(healed);
+				num_of_healed++;
 				if (healed->getHealth() > .2 * healed->getinitialhealth()) {
 					earthArmy.addEarthTank(healed);
 					healed->settimeUml(-1);
@@ -513,10 +595,295 @@ void Game::HealLogic() {
 				break;
 		}
 	Unit* deleter = nullptr;
-	while (TempListfortank.dequeue(deleter)) 
+	while (TempListfortank.dequeue(deleter)) {
 		Uml2.enqueue(deleter);
+		counterForUML2++;
+	}
 	
-	while (TempListforsoilder.dequeue(deleter))
+	while (TempListforsoilder.dequeue(deleter)) {
 		Uml1.enqueue(deleter, 10000 - deleter->getHealth());
+		counterForUML1++;
+	}
 	
+}
+
+void Game::printQueues(LinkedQueue<Unit*>AfromEs, LinkedQueue<Unit*>AfromEtforAm, LinkedQueue<Unit*>AfromEtforAs, LinkedQueue<Unit*>AfromEgforAm,
+	LinkedQueue<Unit*>AfromEgforAd, LinkedQueue<Unit*>AfromAs, LinkedQueue<Unit*>AfromAmforEs, LinkedQueue<Unit*>AfromAmforEt
+	, LinkedQueue<Unit*>AfromAdforEg, LinkedQueue<Unit*>AfromAdforEt){
+
+	
+	cout << "Current Timestep " << timeStep << endl;//cout current time Step
+	cout << "============== Earth Army Alive Units ============== " << endl;//printing earth army lists
+	earthArmy.printEarthSoldiers();
+	earthArmy.printEarthTanks();
+	earthArmy.printEarthGunnerys();
+	cout << endl;
+	cout << "============== Alien Army Alive Units ============== " << endl;//printing alien army lists
+	alienArmy.printAlienSoldiers();
+	alienArmy.printAlienDrones();
+	alienArmy.printAlienMonsters();
+	
+	cout << endl<<"==================== HealList ====================="<<endl;
+	earthArmy.printHealUnits();
+	cout <<endl;
+
+	cout << endl << "====================== Unit Maintenance List ===============" << endl;
+	printUML();
+	cout << endl;
+
+	cout << "===================== Units fighting at current step ===============" << endl;
+//Attacked from earth soilder
+	Unit* Es = nullptr, * Et = nullptr, * Eg = nullptr, * As = nullptr, * Am = nullptr,*Ad1=nullptr,*Ad2=nullptr;
+	if (AfromEs.dequeue(Es)) {
+		cout << "ES " << Es->getID() << " shots ";
+		cout << "[";
+		AfromEs.print_the_list();
+		cout << "]" << endl;
+	}
+	//Attacked from earth tank
+	if (AfromEtforAm.dequeue(Et)) {
+		cout << "ET " << Et->getID() << " shots ";
+		cout << "[";
+		AfromEtforAm.print_the_list();
+		cout << "] && [";
+		AfromEtforAs.print_the_list();
+		cout << "]" << endl;
+	}
+	//Attacked from earth Gunnery
+	if (AfromEgforAm.dequeue(Eg)) {
+		cout << "EG " << Eg->getID() << " shots ";
+		cout << "[";
+		AfromEgforAm.print_the_list();
+		cout << "] && [";
+		AfromEgforAd.print_the_list();
+		cout << "]" << endl;
+	}
+	//Attacked from alien soilder
+	if (AfromAs.dequeue(As)) {
+		cout << "AS " << As->getID() << " shots ";
+		cout << "[";
+		AfromAs.print_the_list();
+		cout << "]" << endl;
+	}
+	//Attacked from alien monster
+	if (AfromAmforEs.dequeue(Am)) {
+		cout << "AM " << Am->getID() << " shots ";
+		cout << "[";
+		AfromAmforEs.print_the_list();
+		cout << "] && [";
+		AfromAmforEt.print_the_list();
+		cout << "]" << endl;
+	}
+	//Attacked from alien drones
+	if (AfromAdforEg.dequeue(Ad1)&& AfromAdforEg.dequeue(Ad2)) {
+		cout << "AD " << Ad1->getID()<<" && "<< Ad2->getID()<< " shots ";
+		cout << "[";
+		AfromAdforEg.print_the_list();
+		cout << "] && [";
+		AfromAdforEt.print_the_list();
+		cout << "]" << endl;
+	}
+	cout << endl;
+	cout << "============== Killed/Destructed Units ============= " << endl;
+	PrintKilledList();//printing the killed list of units
+}
+
+void Game::printUML() {
+	cout << counterForUML1 << " ES [";
+	Uml1.print_the_list();
+	cout << "]"<<endl;
+	cout << counterForUML2 << " ET [";
+	Uml2.print_the_list();
+	cout << "]" << endl;
+}
+
+void Game::CreateOutputFile(char filename[],LinkedQueue<Unit*>AfromEs, LinkedQueue<Unit*>AfromEtforAm, LinkedQueue<Unit*>AfromEtforAs, LinkedQueue<Unit*>AfromEgforAm,
+	LinkedQueue<Unit*>AfromEgforAd, LinkedQueue<Unit*>AfromAs, LinkedQueue<Unit*>AfromAmforEs, LinkedQueue<Unit*>AfromAmforEt
+	, LinkedQueue<Unit*>AfromAdforEg, LinkedQueue<Unit*>AfromAdforEt) {
+	char filePath[100];
+	ofstream file;
+
+	for (int i = 0; i < strlen(filename); i++)
+		filePath[i] = filename[i];
+	filePath[strlen(filename)] = '.';
+	filePath[strlen(filename) + 1] = 't';
+	filePath[strlen(filename) + 2] = 'x';
+	filePath[strlen(filename) + 3] = 't';
+	filePath[strlen(filename) + 4] = '\0';
+
+	file.open(filePath, ios::out);
+
+	Unit* forascending = nullptr;
+	priQueue<Unit*> ascending;//ascendingly by td
+	LinkedQueue<Unit*> collect;//i make it to return the values to killed List
+	while (KilledList.dequeue(forascending)) {
+		ascending.enqueue(forascending, 10000 - forascending->getTd());
+		collect.enqueue(forascending);
+	}
+	while (collect.dequeue(forascending))
+		KilledList.enqueue(forascending);
+
+	int f = 0;
+	int Df, Dd, Db;
+	int Total_Df_E=0, Total_Dd_E=0, Total_Db_E=0,counter_E_for_Ave=0;
+	int Total_Df_A = 0, Total_Dd_A = 0, Total_Db_A = 0, counter_A_for_Ave=0;
+	while (ascending.dequeue(forascending, f)) {//printing the Killed List  ascendingly by Td
+		file << "Td  ID  Tj  Df  Dd  Db" << endl;
+		file << forascending->getTd();
+		if(forascending->getTd() > 9)
+			file <<"  ";
+		else
+			file << "   ";
+		
+		file << forascending->getID();
+		if (forascending->getID() > 9)
+			file << "  ";
+		else
+			file << "   ";
+		
+		file << forascending->getTj();
+		if (forascending->getTj() > 9)
+			file << "  ";
+		else
+			file << "   ";
+	
+		Df = forascending->getTa() - forascending->getTj();
+		file <<Df;
+		if (Df > 9)
+			file << "  ";
+		else
+			file << "   ";
+
+		Dd = forascending->getTd() - forascending->getTa();
+		file <<Dd;
+		if (Dd > 9)
+			file << "  ";
+		else
+			file << "   ";
+
+		Db = forascending->getTd() - forascending->getTj();
+		file <<Db;
+		if (Db > 9)
+			file << "  ";
+		else
+			file << "   ";
+		file << endl << endl;
+		if (forascending->getTYPE() == 0 || forascending->getTYPE() == 1 || forascending->getTYPE() == 2) {
+			Total_Df_E += Df;
+			Total_Dd_E += Dd; 
+			Total_Db_E += Db;
+			counter_E_for_Ave++;
+		}
+		else {
+			Total_Df_A += Df;
+			Total_Dd_A += Dd;
+			Total_Db_A += Db;
+			counter_A_for_Ave++;
+		}
+	}
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	int eartharmyunits = earthArmy.getEScount() + counterForUML1 + killedcountEs + earthArmy.getETcount() + counterForUML2 + killedcountEt +
+		earthArmy.getEGcount() + killedcountEg;
+
+	file << "================= Earth Army =================" << endl;
+	file << "Battle Result:";
+	int earthcount = earthArmy.getEScount() + earthArmy.getEGcount() + earthArmy.getETcount();
+	int aliencount = alienArmy.getADcount() + alienArmy.getAMcount() + alienArmy.getAScount();
+	if (earthcount == 0 && aliencount == 0)
+		file << "  Drawn" << endl;
+	else if (earthcount == 0)
+		file << "  Loss" << endl;
+	else if (aliencount == 0)
+		file << "  Win"<<endl;
+	else
+		file << "  Drawn" << endl;
+	file  << endl;
+	file <<"Total_Es = " << earthArmy.getEScount() + counterForUML1 + killedcountEs<<endl;
+	file << "Total_Et = " << earthArmy.getETcount() + counterForUML2 + killedcountEt << endl;
+	file << "Total_Eg = " << earthArmy.getEGcount() + killedcountEg << endl<<endl;
+
+
+	double percentage1 = 0, percentage2 = 0, percentage3 = 0;
+	percentage1 = ((double)killedcountEs / (earthArmy.getEScount() + counterForUML1 + killedcountEs));
+	file << "Es_Destructed/Es_Total = " << percentage1 * 100 << "%" << endl;
+	percentage2 = ((double)killedcountEt / (earthArmy.getETcount() + counterForUML2 + killedcountEt));
+	file << "Et_Destructed/Et_Total = " << percentage2 * 100 << "%" << endl;
+	percentage3 = ((double)killedcountEg / (earthArmy.getEGcount() + killedcountEg));
+	file << "Eg_Destructed/Eg_Total = " << percentage3 * 100 << "%" << endl;
+
+	int destructed_Earth = killedcountEs + killedcountEt + killedcountEg;
+
+	file << "Total_Destructed/Total_Units = " << ((double)destructed_Earth/eartharmyunits )*100<<"%" << endl << endl;
+	if (counter_E_for_Ave > 0) {
+		file << "Average_of_DF = " << (double)Total_Df_E / counter_E_for_Ave << endl;
+		file << "Average_of_Dd = " << (double)Total_Dd_E / counter_E_for_Ave << endl;
+		file << "Average_of_Db = " << (double)Total_Db_E / counter_E_for_Ave << endl << endl;
+	}
+	else {
+		file << "Average_of_DF = " << "Not defined" << endl;
+		file << "Average_of_Dd = " << "Not defined" << endl;
+		file << "Average_of_Db = " << "Not defined" << endl << endl;
+	}
+	if (Total_Db_E > 0) {
+		file << "Df/Db = " << (double)Total_Df_E / Total_Db_E << "%" << endl;
+		file << "Dd/Db = " << (double)Total_Dd_E / Total_Db_E << "%" << endl << endl;
+	}
+	else {
+		file << "Df/Db = " << "Not defined" << endl;
+		file << "Dd/Db = " << "Not defined" << endl << endl;
+	}
+
+	file << "Healed_successfully/Total_Earth = " << (double)num_of_healed / eartharmyunits << "%" << endl << endl;
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+	int alienarmyunits = alienArmy.getAScount() + killedcountAs + alienArmy.getAMcount() + killedcountAm + alienArmy.getADcount() + killedcountAd;
+
+	file << "============== Alien Army ============" << endl;
+	file << "Battle Result:";
+	if (earthcount == 0 && aliencount == 0)
+		file << "  Drawn" << endl;
+	else if (earthcount == 0)
+		file << "  Win" << endl;
+	else if (aliencount == 0)
+		file << "  Loss" << endl;
+	else
+		file << "  Drawn" << endl;
+	file << endl;
+
+	file << "Total_AS = " << alienArmy.getAScount() + killedcountAs << endl;
+	file << "Total_AM = " << alienArmy.getAMcount() + killedcountAm << endl;
+	file << "Total_AD = " << alienArmy.getADcount() + killedcountAd << endl << endl;
+
+
+
+	percentage1 = ((double)killedcountAs / (alienArmy.getAScount() + killedcountAs));
+	file << "As_Destructed/As_Total = " << percentage1 * 100 << "%" << endl;
+	percentage2 = ((double)killedcountAm / (alienArmy.getAMcount() + killedcountAm));
+	file << "Am_Destructed/Am_Total = " << percentage2 * 100 << "%" << endl;
+	percentage3 = ((double)killedcountAd / (alienArmy.getADcount() + killedcountAd));
+	file << "Ad_Destructed/Ad_Total = " << percentage3 * 100 << "%" << endl;
+
+	file << "Total_Destructed/Total_Units = " << ((double)(killedCount-destructed_Earth) / alienarmyunits) * 100 << "%" << endl << endl;
+	if (counter_A_for_Ave > 0) {
+		file << "Average_of_DF = " << (double)Total_Df_A / counter_A_for_Ave << endl;
+		file << "Average_of_Dd = " << (double)Total_Dd_A / counter_A_for_Ave << endl;
+		file << "Average_of_Db = " << (double)Total_Db_A / counter_A_for_Ave << endl << endl;
+	}
+	else {
+		file << "Average_of_DF = " << "Not defined" << endl;
+		file << "Average_of_Dd = " << "Not defined" << endl;
+		file << "Average_of_Db = " << "Not defined" << endl << endl;
+	}
+	if (Total_Db_A > 0) {
+		file << "Df/Db = " << (double)Total_Df_A / Total_Db_A << "%" << endl;
+		file << "Dd/Db = " << (double)Total_Dd_A / Total_Db_A << "%" << endl << endl;
+	}
+	else {
+		file << "Df/Db = " << "Not defined" << endl;
+		file << "Dd/Db = " << "Not defined" << endl << endl;
+	}
+	file.close();
 }

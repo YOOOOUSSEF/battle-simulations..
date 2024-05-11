@@ -1,0 +1,43 @@
+Td  ID  Tj  Df  Dd  Db
+48  336  47  0   1   1   
+
+================= Earth Army =================
+Battle Result:  Drawn
+
+Total_Es = 90
+Total_Et = 178
+Total_Eg = 60
+
+Es_Destructed/Es_Total = 0%
+Et_Destructed/Et_Total = 0.561798%
+Eg_Destructed/Eg_Total = 0%
+Total_Destructed/Total_Units = 0.304878%
+
+Average_of_DF = 0
+Average_of_Dd = 1
+Average_of_Db = 1
+
+Df/Db = 0%
+Dd/Db = 1%
+
+Healed_successfully/Total_Earth = 0%
+
+============== Alien Army ============
+Battle Result:  Drawn
+
+Total_AS = 102
+Total_AM = 121
+Total_AD = 111
+
+As_Destructed/As_Total = 0%
+Am_Destructed/Am_Total = 0%
+Ad_Destructed/Ad_Total = 0%
+Total_Destructed/Total_Units = 0%
+
+Average_of_DF = Not defined
+Average_of_Dd = Not defined
+Average_of_Db = Not defined
+
+Df/Db = Not defined
+Dd/Db = Not defined
+
