@@ -9,6 +9,7 @@ private:
 	LinkedQueue<Unit*> EarthSoldiers;
 	priQueue<Unit*> EarthGunnerys;
 	ArrayStack<Unit*> EarthTanks;
+
 	int EScount;
 	int EGcount;
 	int ETcount;

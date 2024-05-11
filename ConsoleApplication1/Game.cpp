@@ -25,8 +25,9 @@ Game::Game()
 				else if (u->getTYPE() == 1)//if ET
 					earthArmy.addEarthTank(u);//add to earth Tanks stack
 				else if (u->getTYPE() == 2) earthArmy.addEarthGunnery(u);//add to earth Gunnerys pri queue
-				else
-					HealList.push(u);                          //add Heal Unit to HealList
+				else {
+					HealList.push(u);
+				}                          //add Heal Unit to HealList
 			}
 		
 
@@ -40,9 +41,10 @@ Game::Game()
 					alienArmy.addAlienMonster(u);//add to alien monsters array of pointers
 				else alienArmy.addAlienDrone(u);//add to alien drones doubly linked queue of drones
 			}
-
+		AttackLogic();
+		HealLogic();
 		
-		
+		if (timeStep == 49) {
 			cout << "Current Timestep " << timeStep << endl;//cout current time Step
 			cout << "============== Earth Army Alive Units ============== " << endl;//printing earth army lists
 			earthArmy.printEarthSoldiers();
@@ -54,7 +56,7 @@ Game::Game()
 			alienArmy.printAlienMonsters();
 			cout << "============== Killed/Destructed Units ============= " << endl;
 			PrintKilledList();//printing the killed list of units
-		
+		}
 		//cout << "enter any any Number except -1 to conitnue" << endl;
 		//cin >> input;
 		timeStep++;
@@ -101,126 +103,11 @@ void Game::PrintKilledList() const
 	cout << endl;
 }
 
-/*void Game::TEST()
-{
-	
-	int X = rand()%100+1;//rand x from 1 to 100
-	Unit* temp= NULL;
-	Unit* temp2 = NULL;
-	if (X < 10)
-	{
-		earthArmy.RemoveEarthSoldier(temp);//dequeue from earth soldiers queue 
-		if(temp)//checking if not equal null
-		earthArmy.addEarthSoldier(temp);//back it to its list
-	}
-
-	else if (X<20)
-	{
-		earthArmy.RemoveEarthTank(temp);//pop from earth tank Stack
-		if(temp)//if there is top
-		addToKilledList(temp);//adding it to killed list
-	}
-
-	else if (X < 30)
-	{
-		earthArmy.RemoveEarthGunnery(temp);//dequeuing an earth Gunnery
-		if (temp)//if exsits
-		{
-			temp->setHealth(temp->getHealth() / 2);//decrement its health to its half
-			earthArmy.addEarthGunnery(temp);//back it to its list
-		}
-	}
-
-	else if (X < 40)
-	{
-		if (alienArmy.getAScount() >= 5)
-		{
-
-			for (int i = 0; i < 5; i++)//if we have 5 AS or more dequeue 5 AS
-			{
-				alienArmy.RemoveAlienSoldier(temp);//dequeuing an alienSoldier
-				if (temp) {
-					temp->setHealth(temp->getHealth() / 2);//decrement its health
-					TempList.enqueue(temp);  //go to templist
-				}
-			}
-
-			for (int i = 0; i < 5; i++)
-			{
-				TempList.dequeue(temp);//dequeuing from templist
-				if(temp)
-				alienArmy.addAlienSoldier(temp);//back it its original list
-			}
-		}
-
-		else {
-			for (int i = 0; i < alienArmy.getAScount(); i++)//same logic but with less number of AS
-			{
-				alienArmy.RemoveAlienSoldier(temp);
-				if (temp) {
-					temp->setHealth(temp->getHealth() / 2);
-					TempList.enqueue(temp);
-				}
-			}
-
-			for (int i = 0; i < alienArmy.getAScount(); i++)
-			{
-				TempList.dequeue(temp);
-				if(temp)
-				alienArmy.addAlienSoldier(temp);
-			}
-
-		}
-	}
-	else if (X < 50)
-	{
-		if(alienArmy.getAMcount()>=5)//if we have 5 AM or more
-			for (int i = 0; i < 5; i++)//take 5 AMs
-			{
-				alienArmy.RemoveAlienMonster(temp);//remove them from the array randomly
-				if(temp)
-				alienArmy.addAlienMonster(temp);//back it  to the array
-			}
-		else 
-			for (int i = 0; i < alienArmy.getAMcount() ;i++)//same logic if we have less number
-			{
-				alienArmy.RemoveAlienMonster(temp);
-				if(temp)
-				alienArmy.addAlienMonster(temp);
-			}
-	}
-	
-	else if (X < 60)
-	{
-		if (alienArmy.getADcount() >= 6)//if we have 6AS or more
-		{
-			for(int i=0;i<3;i++)//dequeuing 6 ADs from first and last
-			{
-				alienArmy.RemoveAlienDroneFirst(temp);
-				alienArmy.RemoveAlienDroneLast(temp2);
-				if(temp)addToKilledList(temp);//back them to killed list
-				if(temp2)addToKilledList(temp2);//back them to killed list
-			}
-		}
-		else 
-		{
-         
-			while(alienArmy.getADcount()!=0)//if we have a number less than 6
-			{//same logic
-				alienArmy.RemoveAlienDroneFirst(temp);
-				alienArmy.RemoveAlienDroneLast(temp2);
-
-			  	if(temp)addToKilledList(temp);
-			    if(temp2)addToKilledList(temp2);
-
-		    }
-
-		}
-
-	}
 
 
-}*/
+
+
+
 
 void Game::AttackLogic() {
 	////////////////////////////////////////////////////////////solider
@@ -356,26 +243,32 @@ void Game::AttackLogic() {
 				if (adl || adf) {
 					i++;
 					flag2 = true;
-					Eg->Attack(Adf);
-					Eg->Attack(Adl);
-					if (Adf->getTa() == -1)
-						Adf->setTa(timeStep);
-					if (Adl->getTa() == -1)
-						Adl->setTa(timeStep);
-					if (Adf->getHealth() <= 0) {
-						Adf->setTd(timeStep);
-						addToKilledList(Adf);
+					if (adl) {
+						Eg->Attack(Adl);
+						if (Adl->getTa() == -1)
+							Adl->setTa(timeStep);
+						if (Adl->getHealth() <= 0) {
+							Adl->setTd(timeStep);
+							addToKilledList(Adl);
+						}
+						else
+							TempList.enqueue(Adl);
 					}
-					else
-						TempList.enqueue(Adf);
+					if (adf) {
+						Eg->Attack(Adf);
 
-					if (Adl->getHealth() <= 0) {
-						Adl->setTd(timeStep);
-						addToKilledList(Adl);
+						if (Adf->getTa() == -1)
+							Adf->setTa(timeStep);
+
+						if (Adf->getHealth() <= 0) {
+							Adf->setTd(timeStep);
+							addToKilledList(Adf);
+						}
+						else
+							TempList.enqueue(Adf);
 					}
-					else
-						TempList.enqueue(Adl);
-				}
+					}
+				
 			}
 			if (!flag1 && !flag2)
 				break;
@@ -508,10 +401,11 @@ void Game::AttackLogic() {
 
 		ad1 = alienArmy.RemoveAlienDroneFirst(Ad1);
 		ad2 = alienArmy.RemoveAlienDroneLast(Ad2);
-		if (Ad1->getAttackCap() < Ad2->getAttackCap()) capacity = Ad1->getAttackCap();
-		else capacity = Ad2->getAttackCap();
 		if (ad1 && ad2)
 		{
+		if (Ad1->getAttackCap() < Ad2->getAttackCap()) capacity = Ad1->getAttackCap();
+		else capacity = Ad2->getAttackCap();
+	
 			for (int i = 0; i < capacity; )
 			{
 				bool flag1 = false, flag2 = false;
