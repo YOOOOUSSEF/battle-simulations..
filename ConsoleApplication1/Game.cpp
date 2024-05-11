@@ -5,6 +5,7 @@
 using namespace std;
 Game::Game()
 {
+	int input;
 	num_of_healed = 0;
 	counterForUML1 = counterForUML2 = 0;
 	 timeStep= 0;
@@ -16,8 +17,10 @@ Game::Game()
 	LoadFromFile(fileName);//calling loading file function
 	cout << "enter any any Number except -1 to start " << endl;
 	
+	
+	cin >> input;
 	srand(time(NULL));
-	while (timeStep!=50)
+	while (input!=-1||timeStep!=50)
 	{
 		if(R.GenerateA(Prob))//generate randomA from randGen
 			for (int i = 0; i < N; i++) 
@@ -48,6 +51,9 @@ Game::Game()
 
 		AttackLogic();
 	
+		cout << "if you want to terminate the program press -1"<<endl;
+		cin >> input;
+
 		timeStep++;
 	
 	}
@@ -541,9 +547,9 @@ void Game::AttackLogic() {
 		char f[] = "youssef";
 		CreateOutputFile(f, AttackedFromES, AttackedFromETforMonster, AttackedFromETforSoilder, AttackedFromEGforMonster, AttackedFromEGforDrones
 			, AttackedFromAS, AttackedFromAMforSoilder, AttackedFromAMforTank, AttackedFromADforGunnery, AttackedFromADforTank);
-		printQueues(AttackedFromES, AttackedFromETforMonster, AttackedFromETforSoilder, AttackedFromEGforMonster, AttackedFromEGforDrones
-			, AttackedFromAS, AttackedFromAMforSoilder, AttackedFromAMforTank, AttackedFromADforGunnery, AttackedFromADforTank);
 	}
+	printQueues(AttackedFromES, AttackedFromETforMonster, AttackedFromETforSoilder, AttackedFromEGforMonster, AttackedFromEGforDrones
+		, AttackedFromAS, AttackedFromAMforSoilder, AttackedFromAMforTank, AttackedFromADforGunnery, AttackedFromADforTank);
 }
 
 void Game::HealLogic() {
