@@ -944,7 +944,3 @@ void Game::infectionspread()
 	
 	}
 }
-void Game:: printearthsoilders()
-{
-	
-}
