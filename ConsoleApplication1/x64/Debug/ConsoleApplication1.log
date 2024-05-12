@@ -1,4 +1,6 @@
 ﻿  Game.cpp
-C:\battle_project\ConsoleApplication1\EarthArmy.h(3,9): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\battle_project\ConsoleApplication1\Game.cpp(21,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  ConsoleApplication1.vcxproj -> C:\battle_project\x64\Debug\ConsoleApplication1.exe
+C:\Users\walee\Desktop\project\ConsoleApplication1\EarthArmy.h(3,9): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\walee\Desktop\project\ConsoleApplication1\Game.cpp(22,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\walee\Desktop\project\ConsoleApplication1\Game.cpp(452,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\walee\Desktop\project\ConsoleApplication1\Game.cpp(911,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  ConsoleApplication1.vcxproj -> C:\Users\walee\Desktop\project\x64\Debug\ConsoleApplication1.exe

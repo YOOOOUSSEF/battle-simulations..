@@ -9,6 +9,7 @@ Unit::Unit(double h, double pw, double AC, int tj) :Health(h), Power(pw), Attack
 	setTd(-1);
 	initialhealth = h;
 	timeUml = -1;
+	infected = false;
 }
 
 void Unit::Attack(Unit*&a)
@@ -102,7 +103,23 @@ void Unit::settimeUml(int p) {
 
 ostream& operator<<(ostream& out, Unit* u)
 {
-	out << u->getID();
+	if (u->getinfection())
+	{
+		out << u->getID() << "f";
+	}
+	else
+	{
+		out << u->getID();
+	}
 	return out;
 	// TODO: insert return statement here
+}
+
+void Unit::setinfection(bool a)
+{
+	infected = a;
+}
+bool  Unit::getinfection()
+{
+	return infected;
 }

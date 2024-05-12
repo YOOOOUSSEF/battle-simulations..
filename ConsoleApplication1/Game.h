@@ -26,6 +26,8 @@ private:
 	int killedcountEs, killedcountEt, killedcountEg, killedcountAs, killedcountAm, killedcountAd;
 	int counterForUML1, counterForUML2;
 	char fileName[100];
+	int infectionprob;
+	int infectioncount;
 public:
 	Game();
 	void AttackLogic();
@@ -39,5 +41,7 @@ public:
 	
 	void CreateOutputFile(char filename[],LinkedQueue<Unit*>, LinkedQueue<Unit*>, LinkedQueue<Unit*>, LinkedQueue<Unit*>, LinkedQueue<Unit*>
 		, LinkedQueue<Unit*>, LinkedQueue<Unit*>, LinkedQueue<Unit*>, LinkedQueue<Unit*>, LinkedQueue<Unit*>);
+	void infectionspread();
+	void printearthsoilders();
 };
 
