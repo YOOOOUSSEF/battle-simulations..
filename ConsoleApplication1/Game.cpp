@@ -188,11 +188,12 @@ void Game::AttackLogic() {
 	if (et) {
 		
 		AttackedFromETforMonster.enqueue(Et);//the Attacker unit
-		for (int i = 0; i < Et->getAttackCap(); i++) {
-
+		for (int i = 0; i < Et->getAttackCap(); ) {
+			bool flag3 = false;
 			am = alienArmy.RemoveAlienMonster(Am);
 			if (am) {
-
+				i++;
+				flag3 = true;
 				Et->Attack(Am);
 				if (Am->getTa() == -1)
 					Am->setTa(timeStep);
@@ -205,6 +206,7 @@ void Game::AttackLogic() {
 				
 				AttackedFromETforMonster.enqueue(Am);//List for printing the last attacked Am by ET
 			}
+
 			if (earthArmy.getEScount() < .3 * alienArmy.getAScount()) {
 				for (; i < Et->getAttackCap(); ) {
 					bool flag1 = false, flag2 = false;
@@ -251,6 +253,8 @@ void Game::AttackLogic() {
 
 				}
 			}
+			if (!flag3)
+				break;
 		}
 		earthArmy.addEarthTank(Et);
 	}
