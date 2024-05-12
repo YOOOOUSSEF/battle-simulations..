@@ -33,6 +33,7 @@ Unit* randGen::GenEarthUnit(int ESpercent, int ETpercent, int EGpercent,int HUpe
 		RandUnit->setPower(tempPower);
 		int tempHealth = getRandBetween(smallHealth, highHealth);
 		RandUnit->setHealth(tempHealth);
+		RandUnit->setinitialhealth(tempHealth);
 		int tempATCap = getRandBetween(smallAttackCap, highAttackCap);
 		RandUnit->setAttackCap(tempATCap);
 		///////////////////
@@ -47,6 +48,7 @@ Unit* randGen::GenEarthUnit(int ESpercent, int ETpercent, int EGpercent,int HUpe
 		RandUnit->setPower(tempPower);
 		int tempHealth = getRandBetween(smallHealth, highHealth);
 		RandUnit->setHealth(tempHealth);
+		RandUnit->setinitialhealth(tempHealth);
 		int tempATCap = getRandBetween(smallAttackCap, highAttackCap);
 		RandUnit->setAttackCap(tempATCap);
 		return RandUnit;

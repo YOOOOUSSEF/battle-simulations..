@@ -5,7 +5,7 @@
 using namespace std;
 Game::Game()
 {
-	int input;
+	int input=-1;
 	num_of_healed = 0;
 	counterForUML1 = counterForUML2 = 0;
 	 timeStep= 0;
@@ -15,10 +15,9 @@ Game::Game()
 	cout << "enter the file Name" << endl;
 	cin >> fileName;//entering the name of file
 	LoadFromFile(fileName);//calling loading file function
-	cout << "enter any any Number except -1 to start " << endl;
-	
-	
-	cin >> input;
+
+	//cout << "enter any any Number except -1 to start " << endl;
+	//cin >> input;
 	srand(time(NULL));
 	while (input!=-1||timeStep!=50)
 	{
@@ -51,8 +50,8 @@ Game::Game()
 
 		AttackLogic();
 	
-		cout << "if you want to terminate the program press -1"<<endl;
-		cin >> input;
+		//cout << "if you want to terminate the program press -1"<<endl;
+		//cin >> input;
 
 		timeStep++;
 	
@@ -547,9 +546,10 @@ void Game::AttackLogic() {
 		char f[] = "youssef";
 		CreateOutputFile(f, AttackedFromES, AttackedFromETforMonster, AttackedFromETforSoilder, AttackedFromEGforMonster, AttackedFromEGforDrones
 			, AttackedFromAS, AttackedFromAMforSoilder, AttackedFromAMforTank, AttackedFromADforGunnery, AttackedFromADforTank);
+
+		printQueues(AttackedFromES, AttackedFromETforMonster, AttackedFromETforSoilder, AttackedFromEGforMonster, AttackedFromEGforDrones
+			, AttackedFromAS, AttackedFromAMforSoilder, AttackedFromAMforTank, AttackedFromADforGunnery, AttackedFromADforTank);
 	}
-	printQueues(AttackedFromES, AttackedFromETforMonster, AttackedFromETforSoilder, AttackedFromEGforMonster, AttackedFromEGforDrones
-		, AttackedFromAS, AttackedFromAMforSoilder, AttackedFromAMforTank, AttackedFromADforGunnery, AttackedFromADforTank);
 }
 
 void Game::HealLogic() {
@@ -742,7 +742,9 @@ void Game::CreateOutputFile(char filename[],LinkedQueue<Unit*>AfromEs, LinkedQue
 			file << "   ";
 		
 		file << forascending->getID();
-		if (forascending->getID() > 9)
+		if (forascending->getID() > 99)
+			file << " ";
+		else if (forascending->getID() > 9)
 			file << "  ";
 		else
 			file << "   ";

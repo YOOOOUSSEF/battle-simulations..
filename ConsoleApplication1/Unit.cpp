@@ -7,7 +7,7 @@ Unit::Unit(double h, double pw, double AC, int tj) :Health(h), Power(pw), Attack
 	ID = -1;
 	setTa(-1);
 	setTd(-1);
-	initialhealth = Health;
+	initialhealth = h;
 	timeUml = -1;
 }
 
