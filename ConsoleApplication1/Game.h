@@ -25,6 +25,7 @@ private:
 	int killedCount,timeStep, num_of_healed;;
 	int killedcountEs, killedcountEt, killedcountEg, killedcountAs, killedcountAm, killedcountAd;
 	int counterForUML1, counterForUML2;
+	int mode;
 	char fileName[100];
 public:
 	Game();

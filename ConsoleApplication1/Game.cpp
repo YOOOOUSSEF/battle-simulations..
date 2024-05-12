@@ -6,18 +6,24 @@ using namespace std;
 Game::Game()
 {
 	int input=-1;
+     mode = 0;
 	num_of_healed = 0;
 	counterForUML1 = counterForUML2 = 0;
 	 timeStep= 0;
 	 killedCount = 0;
 	 killedcountEs = killedcountEt = killedcountEg = killedcountAs = killedcountAm = killedcountAd = 0;
 	//intialize the data members of the game
-	cout << "enter the file Name" << endl;
+	cout << "Enter the file Name" << endl;
 	cin >> fileName;//entering the name of file
+	cout << endl;
 	LoadFromFile(fileName);//calling loading file function
+	cout << "Enter the mode number" << endl;
+	cout << "1- Interactive Mode" << endl << "2- Silent Mode" << endl ;
+	cin >> mode;
+	cout << endl;
 
-	//cout << "enter any any Number except -1 to start " << endl;
-	//cin >> input;
+	cout << "enter any Number except -1 to start " << endl;
+	cin >> input;
 	srand(time(NULL));
 	while (input!=-1||timeStep!=50)
 	{
@@ -49,12 +55,13 @@ Game::Game()
 			}
 
 		AttackLogic();
-	
-		//cout << "if you want to terminate the program press -1"<<endl;
-		//cin >> input;
 
 		timeStep++;
 	
+
+
+		cout <<endl<< "enter any  Number except -1 to start " << endl;
+		cin >> input;
 	}
 	
 
@@ -65,7 +72,11 @@ void Game::LoadFromFile(char filename[]) {
 
 	char filePath[100];
 	ifstream file; // opening an input file
-	for (int i = 0; i < strlen(filename); i++)
+	int count = 0;
+	while (filename[count] != '\0') {
+		count++;
+}
+	for (int i = 0; i < count; i++)
 		filePath[i] = filename[i];
 	filePath[strlen(filename)] = '.';
 	filePath[strlen(filename)+1] = 't';
@@ -126,6 +137,7 @@ void Game::PrintKilledList() const
 void Game::AttackLogic() {
 	////////////////////////////////////////////////////////////solider
 	LinkedQueue<Unit*> TempList;
+
 	LinkedQueue<Unit*> AttackedFromES;
 	LinkedQueue<Unit*> AttackedFromETforMonster;
 	LinkedQueue<Unit*> AttackedFromETforSoilder;
@@ -142,7 +154,7 @@ void Game::AttackLogic() {
 	bool as = true, es = true;
 	es = earthArmy.RemoveEarthSoldier(Es);
 	if (es) {
-		if (timeStep == 49)
+		
 		AttackedFromES.enqueue(Es);//the attacker unit
 		for (int i = 0; i < Es->getAttackCap(); i++) {
 			as = alienArmy.RemoveAlienSoldier(As);
@@ -156,7 +168,7 @@ void Game::AttackLogic() {
 				}
 				else 
 					TempList.enqueue(As);
-				if (timeStep == 49)
+			
 				AttackedFromES.enqueue(As);//List for printing the last attacked As
 				
 			}
@@ -174,7 +186,7 @@ void Game::AttackLogic() {
 	bool et = true, am = true;
 	et = earthArmy.RemoveEarthTank(Et);
 	if (et) {
-		if (timeStep == 49)
+		
 		AttackedFromETforMonster.enqueue(Et);//the Attacker unit
 		for (int i = 0; i < Et->getAttackCap(); i++) {
 
@@ -190,7 +202,7 @@ void Game::AttackLogic() {
 				}
 				else
 					TempList.enqueue(Am);
-				if (timeStep == 49)
+				
 				AttackedFromETforMonster.enqueue(Am);//List for printing the last attacked Am by ET
 			}
 			if (earthArmy.getEScount() < .3 * alienArmy.getAScount()) {
@@ -209,7 +221,7 @@ void Game::AttackLogic() {
 						}
 						else
 							TempList.enqueue(As);
-						if (timeStep == 49)
+						
 						AttackedFromETforSoilder.enqueue(As);//List for printing the last attacked As
 					}
 
@@ -229,7 +241,7 @@ void Game::AttackLogic() {
 							}
 							else
 								TempList.enqueue(Am);
-							if (timeStep == 49)
+							
 							AttackedFromETforMonster.enqueue(Am);//List for printing the last attacked Am by ET
 						}
 
@@ -257,7 +269,7 @@ void Game::AttackLogic() {
 	am = true;
 	eg = earthArmy.RemoveEarthGunnery(Eg);
 	if (eg) {
-		if (timeStep == 49)
+		
 		AttackedFromEGforMonster.enqueue(Eg);//the Attacker unit
 		for (int i = 0; i < Eg->getAttackCap();) {
 			bool flag1 = false, flag2 = false;
@@ -274,7 +286,7 @@ void Game::AttackLogic() {
 				}
 				else
 					TempList.enqueue(Am);
-				if (timeStep == 49)
+				
 				AttackedFromEGforMonster.enqueue(Am);//List for printing the last attacked Am by EG
 			}
 
@@ -294,7 +306,7 @@ void Game::AttackLogic() {
 						}
 						else
 							TempList.enqueue(Adl);
-						if (timeStep == 49)
+						
 						AttackedFromEGforDrones.dequeue(Adl);//List for printing the last attacked AD
 					}
 					if (adf) {
@@ -309,7 +321,7 @@ void Game::AttackLogic() {
 						}
 						else
 							TempList.enqueue(Adf);
-						if (timeStep == 49)
+						
 						AttackedFromEGforDrones.dequeue(Adf);//List for printing the last attacked AD
 					}
 					}
@@ -321,13 +333,19 @@ void Game::AttackLogic() {
 		}
 		earthArmy.addEarthGunnery(Eg);
 	}
+	int j = 0;
 	while (!TempList.isEmpty()) {
 		Unit* unit = nullptr;
 		TempList.dequeue(unit);
 		if (unit->getTYPE() == 4)
 			alienArmy.addAlienMonster(unit);
-		else
-			alienArmy.addAlienDrone(unit);
+		else {
+			if (j % 2 == 0)
+				alienArmy.addAlienDrone(unit);
+			else
+				alienArmy.addAlienDroneFirst(unit);
+			j++;
+		}
 	}
 	//////////////////////////////////////////////////////////aliensolider
 	{
@@ -337,7 +355,7 @@ void Game::AttackLogic() {
 		as = alienArmy.RemoveAlienSoldier(As);
 		if (as)
 		{
-			if (timeStep == 49)
+			
 				AttackedFromAS.enqueue(As);//the Attacker unit
 			for (int i = 0; i < As->getAttackCap(); i++)
 			{
@@ -360,7 +378,7 @@ void Game::AttackLogic() {
 					{
 						TempList.enqueue(Es);
 					}
-					if (timeStep == 49)
+					
 						AttackedFromAS.enqueue(Es);//List for printing the last attacked ES by AS
 				}
 			}
@@ -381,7 +399,7 @@ void Game::AttackLogic() {
 		am = alienArmy.RemoveAlienMonster(Am);
 		if (am)
 		{
-			if (timeStep == 49)
+			
 			AttackedFromAMforSoilder.enqueue(Am);//the Attacker unit
 
 			for (int i = 0; i < Am->getAttackCap(); )
@@ -407,7 +425,7 @@ void Game::AttackLogic() {
 					{
 						TempList.enqueue(Es);
 					}
-					if (timeStep == 49)
+					
 						AttackedFromAMforSoilder.enqueue(Es);//List for printing the last attacked ES by AM
 				}
 				if (i < Am->getAttackCap()) {
@@ -431,7 +449,7 @@ void Game::AttackLogic() {
 						{
 							TempList.enqueue(Et);
 						}
-						if (timeStep == 49)
+						
 							AttackedFromAMforTank.enqueue(Et);//List for printing the last attacked ET by AM
 					}
 				}
@@ -462,10 +480,10 @@ void Game::AttackLogic() {
 		ad2 = alienArmy.RemoveAlienDroneLast(Ad2);
 		if (ad1 && ad2)
 		{
-			if (timeStep == 49) {
+			
 				AttackedFromADforGunnery.enqueue(Ad1);//the attacker units
 				AttackedFromADforGunnery.enqueue(Ad2);//the attacker units
-			}
+			
 		if (Ad1->getAttackCap() < Ad2->getAttackCap()) capacity = Ad1->getAttackCap();
 		else capacity = Ad2->getAttackCap();
 	
@@ -489,7 +507,7 @@ void Game::AttackLogic() {
 					{
 						TempList.enqueue(Eg);
 					}
-					if(timeStep==49)
+					
 					AttackedFromADforGunnery.enqueue(Eg);//List for printing the last attacked EG by AD
 				}
 				if (i < capacity) {
@@ -514,7 +532,7 @@ void Game::AttackLogic() {
 						{
 							TempList.enqueue(Et);
 						}
-						if (timeStep == 49)
+						
 							AttackedFromADforTank.enqueue(Et);//List for printing the last attacked Et by AD
 					}
 				}
@@ -535,21 +553,26 @@ void Game::AttackLogic() {
 			earthArmy.addEarthGunnery(unit);
 	}
 
+	//////////////////////////////////////////////////////////
 
 
+	HealLogic();                  // to heal the atttacked of Es && Et
 
 
-	HealLogic();
-
-
-	if (timeStep == 49) {
-		char f[] = "youssef";
+	//////////////////////////////////////////////////////////
+	char f[] = "Battle_Simulation";
+	if (mode == 1) {
 		CreateOutputFile(f, AttackedFromES, AttackedFromETforMonster, AttackedFromETforSoilder, AttackedFromEGforMonster, AttackedFromEGforDrones
 			, AttackedFromAS, AttackedFromAMforSoilder, AttackedFromAMforTank, AttackedFromADforGunnery, AttackedFromADforTank);
 
 		printQueues(AttackedFromES, AttackedFromETforMonster, AttackedFromETforSoilder, AttackedFromEGforMonster, AttackedFromEGforDrones
 			, AttackedFromAS, AttackedFromAMforSoilder, AttackedFromAMforTank, AttackedFromADforGunnery, AttackedFromADforTank);
 	}
+	else
+		CreateOutputFile(f, AttackedFromES, AttackedFromETforMonster, AttackedFromETforSoilder, AttackedFromEGforMonster, AttackedFromEGforDrones
+			, AttackedFromAS, AttackedFromAMforSoilder, AttackedFromAMforTank, AttackedFromADforGunnery, AttackedFromADforTank);
+
+	
 }
 
 void Game::HealLogic() {
@@ -703,13 +726,16 @@ void Game::printUML() {
 	cout << "]" << endl;
 }
 
-void Game::CreateOutputFile(char filename[],LinkedQueue<Unit*>AfromEs, LinkedQueue<Unit*>AfromEtforAm, LinkedQueue<Unit*>AfromEtforAs, LinkedQueue<Unit*>AfromEgforAm,
+void Game::CreateOutputFile(char filename[], LinkedQueue<Unit*>AfromEs, LinkedQueue<Unit*>AfromEtforAm, LinkedQueue<Unit*>AfromEtforAs, LinkedQueue<Unit*>AfromEgforAm,
 	LinkedQueue<Unit*>AfromEgforAd, LinkedQueue<Unit*>AfromAs, LinkedQueue<Unit*>AfromAmforEs, LinkedQueue<Unit*>AfromAmforEt
 	, LinkedQueue<Unit*>AfromAdforEg, LinkedQueue<Unit*>AfromAdforEt) {
 	char filePath[100];
 	ofstream file;
-
-	for (int i = 0; i < strlen(filename); i++)
+	int count = 0;
+	while (filename[count] != '\0') {
+		count++;
+	}
+	for (int i = 0; i < count; i++)
 		filePath[i] = filename[i];
 	filePath[strlen(filename)] = '.';
 	filePath[strlen(filename) + 1] = 't';
@@ -731,16 +757,16 @@ void Game::CreateOutputFile(char filename[],LinkedQueue<Unit*>AfromEs, LinkedQue
 
 	int f = 0;
 	int Df, Dd, Db;
-	int Total_Df_E=0, Total_Dd_E=0, Total_Db_E=0,counter_E_for_Ave=0;
-	int Total_Df_A = 0, Total_Dd_A = 0, Total_Db_A = 0, counter_A_for_Ave=0;
+	int Total_Df_E = 0, Total_Dd_E = 0, Total_Db_E = 0, counter_E_for_Ave = 0;
+	int Total_Df_A = 0, Total_Dd_A = 0, Total_Db_A = 0, counter_A_for_Ave = 0;
 	while (ascending.dequeue(forascending, f)) {//printing the Killed List  ascendingly by Td
 		file << "Td  ID  Tj  Df  Dd  Db" << endl;
 		file << forascending->getTd();
-		if(forascending->getTd() > 9)
-			file <<"  ";
+		if (forascending->getTd() > 9)
+			file << "  ";
 		else
 			file << "   ";
-		
+
 		file << forascending->getID();
 		if (forascending->getID() > 99)
 			file << " ";
@@ -748,29 +774,29 @@ void Game::CreateOutputFile(char filename[],LinkedQueue<Unit*>AfromEs, LinkedQue
 			file << "  ";
 		else
 			file << "   ";
-		
+
 		file << forascending->getTj();
 		if (forascending->getTj() > 9)
 			file << "  ";
 		else
 			file << "   ";
-	
+
 		Df = forascending->getTa() - forascending->getTj();
-		file <<Df;
+		file << Df;
 		if (Df > 9)
 			file << "  ";
 		else
 			file << "   ";
 
 		Dd = forascending->getTd() - forascending->getTa();
-		file <<Dd;
+		file << Dd;
 		if (Dd > 9)
 			file << "  ";
 		else
 			file << "   ";
 
 		Db = forascending->getTd() - forascending->getTj();
-		file <<Db;
+		file << Db;
 		if (Db > 9)
 			file << "  ";
 		else
@@ -778,7 +804,7 @@ void Game::CreateOutputFile(char filename[],LinkedQueue<Unit*>AfromEs, LinkedQue
 		file << endl << endl;
 		if (forascending->getTYPE() == 0 || forascending->getTYPE() == 1 || forascending->getTYPE() == 2) {
 			Total_Df_E += Df;
-			Total_Dd_E += Dd; 
+			Total_Dd_E += Dd;
 			Total_Db_E += Db;
 			counter_E_for_Ave++;
 		}
@@ -803,26 +829,49 @@ void Game::CreateOutputFile(char filename[],LinkedQueue<Unit*>AfromEs, LinkedQue
 	else if (earthcount == 0)
 		file << "  Loss" << endl;
 	else if (aliencount == 0)
-		file << "  Win"<<endl;
+		file << "  Win" << endl;
 	else
 		file << "  Drawn" << endl;
-	file  << endl;
-	file <<"Total_Es = " << earthArmy.getEScount() + counterForUML1 + killedcountEs<<endl;
+
+	file << endl;
+	file << "Total_Es = " << earthArmy.getEScount() + counterForUML1 + killedcountEs << endl;
 	file << "Total_Et = " << earthArmy.getETcount() + counterForUML2 + killedcountEt << endl;
-	file << "Total_Eg = " << earthArmy.getEGcount() + killedcountEg << endl<<endl;
+	file << "Total_Eg = " << earthArmy.getEGcount() + killedcountEg << endl << endl;
 
 
 	double percentage1 = 0, percentage2 = 0, percentage3 = 0;
-	percentage1 = ((double)killedcountEs / (earthArmy.getEScount() + counterForUML1 + killedcountEs));
-	file << "Es_Destructed/Es_Total = " << percentage1 * 100 << "%" << endl;
-	percentage2 = ((double)killedcountEt / (earthArmy.getETcount() + counterForUML2 + killedcountEt));
-	file << "Et_Destructed/Et_Total = " << percentage2 * 100 << "%" << endl;
-	percentage3 = ((double)killedcountEg / (earthArmy.getEGcount() + killedcountEg));
-	file << "Eg_Destructed/Eg_Total = " << percentage3 * 100 << "%" << endl;
+
+	int Total_Es = (earthArmy.getEScount() + counterForUML1 + killedcountEs);
+	if (Total_Es != 0) {
+		percentage1 = ((double)killedcountEs / Total_Es);
+		file << "Es_Destructed/Es_Total = " << percentage1 * 100 << "%" << endl;
+	}
+	else
+		file << "Es_Destructed/Es_Total = " << "Not defined" << endl;
+
+	int Total_Et = (earthArmy.getETcount() + counterForUML2 + killedcountEt);
+	if (Total_Et != 0) {
+		percentage2 = ((double)killedcountEt / Total_Et);
+		file << "Et_Destructed/Et_Total = " << percentage2 * 100 << "%" << endl;
+	}
+	else
+		file << "Et_Destructed/Et_Total = " << "Not defined" << endl;
+
+	int Total_Eg = (earthArmy.getEGcount() + killedcountEg);
+	if (Total_Eg != 0) {
+		percentage3 = ((double)killedcountEg / Total_Eg);
+		file << "Eg_Destructed/Eg_Total = " << percentage3 * 100 << "%" << endl;
+	}
+	else
+		file << "Eg_Destructed/Eg_Total = " << "Not defined" << endl;
 
 	int destructed_Earth = killedcountEs + killedcountEt + killedcountEg;
+	if (eartharmyunits != 0) {
+		file << "Total_Destructed/Total_Units = " << ((double)destructed_Earth / eartharmyunits) * 100 << "%" << endl << endl;
+	}
+	else
+		file << "Total_Destructed/Total_Units = " << "Not defined" << endl << endl;
 
-	file << "Total_Destructed/Total_Units = " << ((double)destructed_Earth/eartharmyunits )*100<<"%" << endl << endl;
 	if (counter_E_for_Ave > 0) {
 		file << "Average_of_DF = " << (double)Total_Df_E / counter_E_for_Ave << endl;
 		file << "Average_of_Dd = " << (double)Total_Dd_E / counter_E_for_Ave << endl;
@@ -841,9 +890,11 @@ void Game::CreateOutputFile(char filename[],LinkedQueue<Unit*>AfromEs, LinkedQue
 		file << "Df/Db = " << "Not defined" << endl;
 		file << "Dd/Db = " << "Not defined" << endl << endl;
 	}
-
-	file << "Healed_successfully/Total_Earth = " << (double)num_of_healed / eartharmyunits << "%" << endl << endl;
-
+	if (eartharmyunits != 0) {
+		file << "Healed_successfully/Total_Earth = " << (double)num_of_healed / eartharmyunits << "%" << endl << endl;
+	}
+	else
+		file << "Healed_successfully/Total_Earth = " << "Not defined" << endl << endl;
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -866,15 +917,35 @@ void Game::CreateOutputFile(char filename[],LinkedQueue<Unit*>AfromEs, LinkedQue
 	file << "Total_AD = " << alienArmy.getADcount() + killedcountAd << endl << endl;
 
 
+	int Total_As = (alienArmy.getAScount() + killedcountAs);
+	if (Total_As != 0) {
+		percentage1 = ((double)killedcountAs / Total_As);
+		file << "As_Destructed/As_Total = " << percentage1 * 100 << "%" << endl;
+	}
+	else
+		file << "As_Destructed/As_Total = " << "Not defined" << endl;
 
-	percentage1 = ((double)killedcountAs / (alienArmy.getAScount() + killedcountAs));
-	file << "As_Destructed/As_Total = " << percentage1 * 100 << "%" << endl;
-	percentage2 = ((double)killedcountAm / (alienArmy.getAMcount() + killedcountAm));
-	file << "Am_Destructed/Am_Total = " << percentage2 * 100 << "%" << endl;
-	percentage3 = ((double)killedcountAd / (alienArmy.getADcount() + killedcountAd));
-	file << "Ad_Destructed/Ad_Total = " << percentage3 * 100 << "%" << endl;
+	int Total_Am = (alienArmy.getAMcount() + killedcountAm);
+	if (Total_Am != 0) {
+		percentage2 = ((double)killedcountAm / Total_Am);
+		file << "Am_Destructed/Am_Total = " << percentage2 * 100 << "%" << endl;
+	}
+	else
+		file << "Am_Destructed/Am_Total = " << "Not defined" << endl;
 
-	file << "Total_Destructed/Total_Units = " << ((double)(killedCount-destructed_Earth) / alienarmyunits) * 100 << "%" << endl << endl;
+	int Total_Ad = (alienArmy.getADcount() + killedcountAd);
+	if (Total_Ad != 0) {
+		percentage3 = ((double)killedcountAd / Total_Ad);
+		file << "Ad_Destructed/Ad_Total = " << percentage3 * 100 << "%" << endl;
+	}
+	else
+		file << "Ad_Destructed/Ad_Total = " << "Not defined" << endl;
+	
+	if (alienarmyunits != 0) {
+		file << "Total_Destructed/Total_Units = " << ((double)(killedCount - destructed_Earth) / alienarmyunits) * 100 << "%" << endl << endl;
+	}else
+		file << "Total_Destructed/Total_Units = " << "Not defined" << endl << endl;
+
 	if (counter_A_for_Ave > 0) {
 		file << "Average_of_DF = " << (double)Total_Df_A / counter_A_for_Ave << endl;
 		file << "Average_of_Dd = " << (double)Total_Dd_A / counter_A_for_Ave << endl;
